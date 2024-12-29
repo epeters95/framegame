@@ -5,6 +5,8 @@
   const canvasWidth = 1200;
 
   const centerX = Math.floor(canvasWidth / 2);
+  const centerY = Math.floor(canvasWidth / 2);
+
 
   class Display {
     constructor(canvas) {
@@ -14,7 +16,7 @@
       this.frameWidth = canvasWidth / 2;
       this.frameHeight = canvasHeight / 2;
 
-      this.deltaTheta = Math.arctan(this.frameWidth / this.frameHeight)
+      this.theta = Math.arctan(this.frameWidth / this.frameHeight)
 
 
       this.shrinkFactor = 0.8;
@@ -22,7 +24,6 @@
 
       this.bgColor = "black";
       this.fgColor = "white";
-
 
       this.reset();
     }
@@ -41,6 +42,19 @@
 
 
     start() {
+      let radius = Math.hypot(canvasWidth / 2, canvasHeight / 2)
+
+      var frame = new Frame(
+        this.ctx,
+        [centerX, centerY], // center
+        canvasWidth / 2,    // width
+        canvasHeight / 2,   // height
+        radius,             // radius
+        this.theta,         // theta
+        0,                  // deltaTheta
+        this.shrinkFactor,
+        this.depth )
+
       this.windowID = window.setInterval(this.step.bind(this), 30);
     }
     
@@ -56,46 +70,94 @@
 
   class Frame {
 
-    constructor(width, height, theta, deltaTheta, ) {
-      this.canvas = canvas;
-      this.ctx = canvas.getContext('2d');
+    constructor(ctx, center, width, height, radius, theta, deltaTheta, reductionRate, depth, parent=null) {
+      this.ctx = ctx;
 
-      this.frameWidth = canvasWidth / 2;
-      this.frameHeight = canvasHeight / 2;
-
-      this.thickness = 2;
+      this.frameWidth = width;
+      this.frameHeight = height;
+      this.radius = radius;
+      this.theta = theta;
+      this.deltaTheta = deltaTheta;
+      this.reductionRate = reductionRate;
 
       this.bgColor = "black";
       this.fgColor = "white";
 
+      if (parent === null) {
+
+        this.sinRef = Math.sin;
+        this.cosRef = Math.cos;
+        this.translateRef = (arr) => arr;
+
+      } else {
+
+        this.sinRef = (angle) => parent.sin(angle + this.theta)
+        this.cosRef = (angle) => parent.cos(angle + this.theta)
+
+        let that = this;
+
+        this.translateRef = ([x, y]) => {
+          let marginX = that.width * (1 - that.reductionRate) / 2
+          let marginY = that.height * (1 - that.reductionRate) / 2
+
+          return that.parent.translateXY(
+            [
+              x * that.reductionRate + marginX,
+              y * that.reductionRate + marginY
+            ]
+          );
+        }
+      }
+
+
+      if (depth > 0) {
+        this.subFrame = new Frame(
+          ctx,
+          center,
+          width * reductionRate,
+          height * reductionRate,
+          radius * reductionRate,
+          theta,
+          deltaTheta
+          depth - 1,
+          this
+          )
+      }
     }
 
+    sin() {
+      return this.sinRef()
+    }
+
+    cos() {
+      return this.cosRef()
+    }
+
+    translateXY([x, y]) {
+      return this.translateRef([x, y])
+    }
     
     draw() {
 
-      let marginX = this.frameWidth / 4;
-      let marginY = this.frameHeight / 4;
-      
-      this.ctx.fillStyle = this.fgColor;
-      this.ctx.fillRect(
-        marginX,
-        marginY,
-        marginX + this.frameWidth,
-        marginY + this.frameHeight);
+      if (this.subframe) {
 
-      this.ctx.fillStyle = this.bgColor;
-      this.ctx.fillRect(
-        marginX + this.thickness,
-        marginY + this.thickness,
-        marginX + this.frameWidth - (this.thickness * 2),
-        marginY + this.frameHeight - (this.thickness * 2));
+        // Draw its subframe
 
-      this.ctx.beginPath();
-      this.ctx.moveTo(marginX, marginY);
-      this.ctx.lineTo(slider.x + widthL, slider.y + sliderHeight + 2);
-      this.ctx.strokeStyle = 'yellow';
-      this.ctx.stroke();
+        let newWidth = this.subframe.radius * sin(this.theta + this.deltaTheta);
+        let newHeight = this.subframe.radius * cos(this.theta + this.deltaTheta);
+
+        let deltaX = (this.width / 2) - newWidth;
+        let deltaY = (this.height / 2) - newHeight;
+
+        // this.ctx.beginPath();
+        // this.ctx.moveTo( , );
+        // this.ctx.lineTo( , );
+        // this.ctx.strokeStyle = 'white';
+        // this.ctx.stroke();
+      }
     }
+
+
 
   }
 
