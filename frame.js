@@ -5,7 +5,7 @@
   const canvasWidth = 1200;
 
   const centerX = Math.floor(canvasWidth / 2);
-  const centerY = Math.floor(canvasWidth / 2);
+  const centerY = Math.floor(canvasHeight / 2);
 
 
   class Display {
@@ -16,14 +16,28 @@
       this.frameWidth = canvasWidth / 2;
       this.frameHeight = canvasHeight / 2;
 
-      this.theta = Math.arctan(this.frameWidth / this.frameHeight)
+      this.theta = Math.tanh(this.frameWidth / this.frameHeight)
 
 
-      this.shrinkFactor = 0.8;
-      this.depth = 5;
+      this.shrinkFactor = 0.7;
+      this.depth = 6;
 
       this.bgColor = "black";
       this.fgColor = "white";
+
+      let radius = Math.hypot(canvasWidth / 2, canvasHeight / 2)
+
+      this.frame = new Frame(
+        this.ctx,
+        [centerX, centerY], // center
+        canvasWidth,    // width
+        canvasHeight,   // height
+        radius,             // radius
+        this.theta,         // theta
+        0.2,                  // deltaTheta
+        this.shrinkFactor,
+        this.depth )
+
 
       this.reset();
     }
@@ -38,22 +52,12 @@
       this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       this.ctx.fillStyle = this.bgColor;
       this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+      this.frame.draw();
     }
 
 
     start() {
-      let radius = Math.hypot(canvasWidth / 2, canvasHeight / 2)
-
-      var frame = new Frame(
-        this.ctx,
-        [centerX, centerY], // center
-        canvasWidth / 2,    // width
-        canvasHeight / 2,   // height
-        radius,             // radius
-        this.theta,         // theta
-        0,                  // deltaTheta
-        this.shrinkFactor,
-        this.depth )
 
       this.windowID = window.setInterval(this.step.bind(this), 30);
     }
@@ -73,8 +77,9 @@
     constructor(ctx, center, width, height, radius, theta, deltaTheta, reductionRate, depth, parent=null) {
       this.ctx = ctx;
 
-      this.frameWidth = width;
-      this.frameHeight = height;
+      this.center = center;
+      this.width = width;
+      this.height = height;
       this.radius = radius;
       this.theta = theta;
       this.deltaTheta = deltaTheta;
@@ -91,24 +96,21 @@
 
       } else {
 
-        this.sinRef = (angle) => parent.sin(angle + this.theta)
-        this.cosRef = (angle) => parent.cos(angle + this.theta)
-
-        let that = this;
+        this.sinRef = (angle) => parent.sin(angle + this.deltaTheta)
+        this.cosRef = (angle) => parent.cos(angle + this.deltaTheta)
 
         this.translateRef = ([x, y]) => {
-          let marginX = that.width * (1 - that.reductionRate) / 2
-          let marginY = that.height * (1 - that.reductionRate) / 2
+          let marginX = width * (1 - reductionRate) / 2
+          let marginY = height * (1 - reductionRate) / 2
 
-          return that.parent.translateXY(
+          return parent.translateXY(
             [
-              x * that.reductionRate + marginX,
-              y * that.reductionRate + marginY
+              reductionRate * x,
+              reductionRate * y
             ]
           );
         }
       }
-
 
       if (depth > 0) {
         this.subFrame = new Frame(
@@ -118,19 +120,20 @@
           height * reductionRate,
           radius * reductionRate,
           theta,
-          deltaTheta
+          deltaTheta,
+          reductionRate,
           depth - 1,
           this
           )
       }
     }
 
-    sin() {
-      return this.sinRef()
+    sin(angle) {
+      return this.sinRef(angle)
     }
 
-    cos() {
-      return this.cosRef()
+    cos(angle) {
+      return this.cosRef(angle)
     }
 
     translateXY([x, y]) {
@@ -139,21 +142,45 @@
     
     draw() {
 
-      if (this.subframe) {
+      if (this.subFrame) {
 
-        // Draw its subframe
+        // Draw its subFrame
 
-        let newWidth = this.subframe.radius * sin(this.theta + this.deltaTheta);
-        let newHeight = this.subframe.radius * cos(this.theta + this.deltaTheta);
+        let halfWidth = this.width / 2;
+        let halfHeight = this.height / 2;
 
-        let deltaX = (this.width / 2) - newWidth;
-        let deltaY = (this.height / 2) - newHeight;
+        let newWidthL = this.subFrame.radius * this.sin(this.subFrame.theta);
+        let newHeightL = this.subFrame.radius * this.cos(this.subFrame.theta);
 
-        // this.ctx.beginPath();
-        // this.ctx.moveTo( , );
-        // this.ctx.lineTo( , );
-        // this.ctx.strokeStyle = 'white';
-        // this.ctx.stroke();
+        let newWidthR = this.subFrame.radius * this.sin(Math.PI - 1 * (this.subFrame.theta));
+        let newHeightR = this.subFrame.radius * this.cos(Math.PI - 1 * (this.subFrame.theta));
+
+        
+        let pointA = this.translateXY([ -1 * newWidthL, -1 * newHeightL])
+
+        let pointB = this.translateXY([ 1 * newWidthR, newHeightR])
+
+        let pointC = this.translateXY([ 1 * newWidthL, newHeightL])
+
+        let pointD = this.translateXY([ -1 * newWidthR, -1 * newHeightR])
+
+        // Trace 4 paths
+        this.ctx.beginPath();
+
+        this.ctx.moveTo(this.center[0] - pointA[0], this.center[1] - pointA[1]);
+
+        this.ctx.lineTo(this.center[0] - pointB[0],this.center[1] -  pointB[1]);
+
+        this.ctx.lineTo(this.center[0] - pointC[0],this.center[1] -  pointC[1]);
+
+        this.ctx.lineTo(this.center[0] - pointD[0],this.center[1] -  pointD[1]);
+
+        this.ctx.lineTo(this.center[0] - pointA[0],this.center[1] -  pointA[1]);
+
+        this.ctx.strokeStyle = 'white';
+        this.ctx.stroke();
+
+        this.subFrame.draw()
       }
     }
 
@@ -161,9 +188,9 @@
 
   }
 
-  FrameTest.Frame = Frame;
+  FrameTest.Display = Display;
   
   var canvas = document.getElementsByTagName("canvas")[0];
-  new FrameTest.Frame(canvas).start();
+  new FrameTest.Display(canvas).start();
 
 })(this);
