@@ -39,7 +39,7 @@
         x: this.canvas.offsetLeft,
         y: this.canvas.offsetTop
       };
-          let slider = this.slider
+      let slider = this.slider
 
       const mouseDownCallback = (e) => {
         // mouse position relative to the browser window
@@ -49,13 +49,13 @@
         }
 
         const between = (a, b, c) => { return (a >= b && a <= c) };
-          let x = slider.getPlace();
-          if (!slider.held
-              && between(mouse.x, slider.x, slider.y + slider.length)
-              && between(mouse.y, slider.y, slider.y + slider.height)
+          let x = this.slider.getPlace();
+          if (!this.slider.held
+              && between(mouse.x, this.slider.x, this.slider.y + this.slider.length)
+              && between(mouse.y, this.slider.y, this.slider.y + this.slider.height)
           ) {
-            slider.hold();
-            slider.setPlace(mouse.x)
+            this.slider.hold();
+            this.slider.setPlace(mouse.x)
           }
       }
 
@@ -73,30 +73,27 @@
       // Mouse Up / Touch end
 
       const mouseUpCallback = () => {
-        // slidersArray.forEach( (slider) => {
-          this.slider.letgo();
-        // });
+        this.slider.letgo();
       }
       this.canvas.addEventListener('mouseup', mouseUpCallback);
       this.canvas.addEventListener('touchend', mouseUpCallback);
 
 
       // Mouse Move / Touch move
-
       const mouseMoveCallback = (e) => {
-        // slidersArray.forEach( (slider) => {
-          if (slider.held) {
-            const mouse = {
-              x: e.pageX - canvasPosition.x,
-              y: e.pageY - canvasPosition.y
-            }
-            slider.leftWidth = mouse.x - slider.x;
 
-            if (slider.x > sliderStart + sliderLength) {
-              slider.x = sliderStart + sliderLength;
-            }
+        if (this.slider.held) {
+          const mouse = {
+            x: e.pageX - canvasPosition.x,
+            y: e.pageY - canvasPosition.y
           }
-        // });
+          this.slider.leftWidth = mouse.x - this.slider.x;
+
+          if (this.slider.x > sliderStart + sliderLength) {
+            this.slider.x = sliderStart + sliderLength;
+          }
+        }
+
       }
       this.canvas.addEventListener('mousemove', mouseMoveCallback);
       this.canvas.addEventListener('touchmove', (e) => {
@@ -112,12 +109,12 @@
 
       this.frame = new Frame(
         this.canvas,
-        [centerX, centerY], // center
-        canvasWidth,    // width
-        canvasHeight,   // height
-        radius,             // radius
-        this.theta,         // theta
-        () => this.deltaTheta,                  // deltaTheta
+        [centerX, centerY],    // center
+        canvasWidth,           // width
+        canvasHeight,          // height
+        radius,                // radius
+        this.theta,            // theta
+        () => this.deltaTheta, // deltaTheta
         this.shrinkFactor,
         this.depth )
 
@@ -174,11 +171,9 @@
     
     step() {
       
-
       this.draw();
       this.drawSlider(this.slider);
-      
-      // this.drawFrames();
+
     }
   }
 
