@@ -29,7 +29,6 @@
 
       const sliderStart = 0;
       const sliderLength       = 500;
-      const sliderHeight       = 20;
       const sliderX = centerX - Math.floor(sliderLength / 2);
       const sliderY = 0;
 
@@ -188,7 +187,12 @@
       this.theta = theta;
       this.getDeltaTheta = getDeltaTheta
       this.reductionRate = reductionRate;
-      this.color = "rgb(" + (255 / (depth) + "," + (255 / (depth + 1) + "," + (255 / depth) + ")"; 
+
+
+
+      let minDepth = depth * getDeltaTheta() / Math.PI;
+      minDepth = Math.max(1, minDepth);
+      this.color = "rgb(" + (255 / (minDepth) + "," + (255 / (minDepth + 1) + "," + (255 / minDepth) + ")"; 
 
       this.bgColor = "black";
       this.fgColor = "white";
