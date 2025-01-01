@@ -29,12 +29,12 @@
 
       const sliderStart = 0;
       const sliderLength       = 500;
-      const sliderHeight       = 20;
       const sliderX = centerX - Math.floor(sliderLength / 2);
       const sliderY = 0;
+      const sliderHeight = 20;
 
       this.slider = new Slider(sliderX, sliderY, sliderStart, sliderLength)
-      this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - sliderHeight + 10, sliderStart, sliderLength)
+      this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - (sliderHeight + 10), sliderStart, sliderLength)
 
       this.sliders = [this.slider, this.sizeSlider]
 
@@ -143,7 +143,7 @@
       }
 
       if (this.sizeSlider.held) {
-        this.shrinkFactor = 0.7 +  0.25 * this.slider.getRatio();
+        this.shrinkFactor = 0.93 +  0.3 * this.sizeSlider.getRatio();
       }
 
       this.frame.draw();
@@ -182,13 +182,14 @@
       
       this.draw();
       this.drawSlider(this.slider);
+      this.drawSlider(this.sizeSlider);
 
     }
   }
 
   class Frame {
 
-    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, reductionRate, depth, parent=null) {
+    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, parent=null) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
@@ -197,9 +198,12 @@
       this.height = height;
       this.radius = radius;
       this.theta = theta;
-      this.getDeltaTheta = getDeltaTheta
-      this.reductionRate = reductionRate;
-      this.color = "rgb(" + 255 / (depth) + "," + 255 / (depth + 1) + "," + (255 / depth) + ")"; 
+      this.getDeltaTheta = getDeltaTheta;
+      this.getReductionRate = getReductionRate;
+      this.reductionRate = getReductionRate();
+
+      this.getDepth = getDepth;
+      this.depth = getDepth();
 
       this.bgColor = "black";
       this.fgColor = "white";
@@ -216,13 +220,13 @@
         this.cosRef = (angle) => parent.cos(angle + this.getDeltaTheta())
 
         this.translateRef = ([x, y]) => {
-          let marginX = width * (1 - reductionRate) / 2
-          let marginY = height * (1 - reductionRate) / 2
+          let marginX = width * (1 - this.reductionRate) / 2
+          let marginY = height * (1 - this.reductionRate) / 2
 
           return parent.translateXY(
             [
-              reductionRate * x,
-              reductionRate * y
+              this.reductionRate * x,
+              this.reductionRate * y
             ]
           );
         }
@@ -232,13 +236,13 @@
         this.subFrame = new Frame(
           canvas,
           center,
-          width * reductionRate,
-          height * reductionRate,
-          radius * reductionRate,
+          width * this.reductionRate,
+          height * this.reductionRate,
+          radius * this.reductionRate,
           theta,
           getDeltaTheta,
-          reductionRate,
-          depth - 1,
+          getReductionRate,
+          () => this.depth - 1,
           this
           )
       }
@@ -297,6 +301,9 @@
         this.ctx.stroke();
 
         this.subFrame.draw()
+
+        this.depth = this.getDepth();
+        this.reductionRate = this.getReductionRate();
 
       }
     }
