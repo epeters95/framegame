@@ -39,7 +39,6 @@
         x: this.canvas.offsetLeft,
         y: this.canvas.offsetTop
       };
-      let slider = this.slider
 
       const mouseDownCallback = (e) => {
         // mouse position relative to the browser window
@@ -142,24 +141,23 @@
     drawSlider(slider) {
       let widthL = slider.leftWidth;
       let widthR = slider.length - widthL;
-      let sliderHeight = 20;
       const sliderColor        = 'rgba(200,200,200,0.4)';
       //Left side
       this.ctx.beginPath();
       this.ctx.fillStyle = sliderColor;
-      this.ctx.fillRect(slider.x, slider.y, widthL, sliderHeight);
+      this.ctx.fillRect(slider.x, slider.y, widthL, slider.height);
 
       //Slider
       this.ctx.beginPath();
       this.ctx.moveTo(slider.x + widthL, slider.y - 2);
-      this.ctx.lineTo(slider.x + widthL, slider.y + sliderHeight + 2);
+      this.ctx.lineTo(slider.x + widthL, slider.y + slider.height + 2);
       this.ctx.strokeStyle = 'yellow';
       this.ctx.stroke();
 
       //Right Side
       this.ctx.beginPath();
       this.ctx.fillStyle = sliderColor;
-      this.ctx.fillRect(slider.x + widthL + 1, slider.y, widthR, sliderHeight);
+      this.ctx.fillRect(slider.x + widthL + 1, slider.y, widthR, slider.height);
     }
 
 
@@ -190,6 +188,7 @@
       this.theta = theta;
       this.getDeltaTheta = getDeltaTheta
       this.reductionRate = reductionRate;
+      this.color = "rgb(" + (255 / (depth) + "," + (255 / (depth + 1) + "," + (255 / depth) + ")"; 
 
       this.bgColor = "black";
       this.fgColor = "white";
@@ -283,7 +282,7 @@
 
         this.ctx.lineTo(this.center[0] - pointA[0],this.center[1] -  pointA[1]);
 
-        this.ctx.strokeStyle = 'white';
+        this.ctx.strokeStyle = this.color;
         this.ctx.stroke();
 
         this.subFrame.draw()
