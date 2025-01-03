@@ -43,6 +43,8 @@
         y: this.canvas.offsetTop
       };
 
+      // Add general click listeners for all sliders
+
       this.sliders.forEach((slider) => {
 
         const mouseDownCallback = (e) => {
@@ -122,7 +124,7 @@
         this.theta,              // theta
         () => this.deltaTheta,   // deltaTheta
         () => this.shrinkFactor, // reductionRate
-        this.depth )
+        () => this.depth )       // depth
 
       this.reset();
     }
