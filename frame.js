@@ -248,6 +248,15 @@
           this
           )
       }
+      
+      this.color = this.getColor()
+
+    }
+
+    getColor() {
+      let minDepth = this.depth * (2  * this.getDeltaTheta());
+      minDepth = Math.max(1, minDepth);
+      return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth + 1)) + ")"; 
     }
 
     sin(angle) {
@@ -299,7 +308,7 @@
 
         this.ctx.lineTo(this.center[0] - pointA[0],this.center[1] -  pointA[1]);
 
-        this.ctx.strokeStyle = this.color;
+        this.ctx.strokeStyle = this.getColor();
         this.ctx.stroke();
 
         this.subFrame.draw()
