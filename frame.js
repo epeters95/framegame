@@ -254,9 +254,9 @@
     }
 
     getColor() {
-      let minDepth = this.depth * (2  * this.getDeltaTheta());
+      let minDepth = this.depth * (this.getDeltaTheta());
       minDepth = Math.max(1, minDepth);
-      return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth + 1)) + ")"; 
+      return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth)) + ")"; 
     }
 
     sin(angle) {
