@@ -40,12 +40,13 @@
 
       this.canvas.addEventListener('mousedown', () => {
         // Toggle depth
+        console.log("oh shit")
         if (this.depth === 5) {
           this.depth = 15;
         } else {
           this.depth = 7;
         }
-      }
+      })
 
       const canvasPosition = {
         x: this.canvas.offsetLeft,
@@ -243,7 +244,7 @@
         }
       }
 
-      if (depth > 0) {
+      if (this.depth > 0) {
         this.subFrame = new Frame(
           canvas,
           center,
@@ -323,7 +324,10 @@
         this.subFrame.draw()
 
         this.depth = this.getDepth();
+<<<<<<< HEAD
         this.reductionRate = this.getReductionRate();
+=======
+>>>>>>> c756ae2 (fix depth toggle on click)
 
       }
     }
