@@ -1,8 +1,8 @@
 ((root) => {
   var FrameTest = root.FrameTest = (root.FrameTest || {});
 
-  const canvasHeight = 600;
-  const canvasWidth = 1200;
+  const canvasHeight = 1080;
+  const canvasWidth = 1920;
 
   const centerX = Math.floor(canvasWidth / 2);
   const centerY = Math.floor(canvasHeight / 2);
@@ -19,16 +19,16 @@
       this.theta = Math.tanh(this.frameWidth / this.frameHeight)
 
 
-      this.shrinkFactor = 0.9;
+      this.shrinkFactor = 0.93;
       this.deltaTheta = 0;
-      this.depth = 10;
+      this.depth = 15;
 
       this.bgColor = "black";
       this.fgColor = "white";
 
 
       const sliderStart = 0;
-      const sliderLength       = 500;
+      const sliderLength       = 860;
       const sliderX = centerX - Math.floor(sliderLength / 2);
       const sliderY = 0;
       const sliderHeight = 20;
@@ -37,6 +37,15 @@
       this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - (sliderHeight + 10), sliderStart, sliderLength)
 
       this.sliders = [this.slider, this.sizeSlider]
+
+      this.canvas.addEventListener('mousedown', () => {
+        // Toggle depth
+        if (this.depth === 5) {
+          this.depth = 15;
+        } else {
+          this.depth = 7;
+        }
+      }
 
       const canvasPosition = {
         x: this.canvas.offsetLeft,
