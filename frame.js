@@ -324,10 +324,7 @@
         this.subFrame.draw()
 
         this.depth = this.getDepth();
-<<<<<<< HEAD
         this.reductionRate = this.getReductionRate();
-=======
->>>>>>> c756ae2 (fix depth toggle on click)
 
       }
     }
