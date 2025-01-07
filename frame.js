@@ -26,6 +26,9 @@
       this.bgColor = "black";
       this.fgColor = "white";
 
+      this.holding = false;
+      this.mouseXY = [0, 0];
+
 
       const sliderStart = 0;
       const sliderLength       = 860;
@@ -39,13 +42,22 @@
       this.sliders = [this.slider, this.sizeSlider]
 
       this.canvas.addEventListener('mousedown', () => {
-        // Toggle depth
-        console.log("oh shit")
-        if (this.depth === 5) {
-          this.depth = 15;
-        } else {
-          this.depth = 7;
+        this.holding = true;
+      })
+
+      this.canvas.addEventListener('mousemove', (e) => {
+
+        if (this.holding) {
+          this.mouseXY = [
+            e.pageX - this.canvas.offsetLeft,
+            e.pageY - this.canvas.offsetTop
+          ];
         }
+
+      })
+
+      this.canvas.addEventListener('mouseup', () => {
+        this.holding = false;
       })
 
       const canvasPosition = {
@@ -60,19 +72,20 @@
         const mouseDownCallback = (e) => {
           // mouse position relative to the browser window
           const mouse = { 
-              x: e.pageX - canvasPosition.x,
-              y: e.pageY - canvasPosition.y
+            x: e.pageX - canvasPosition.x,
+            y: e.pageY - canvasPosition.y
           }
 
           const between = (a, b, c) => { return (a >= b && a <= c) };
-            let x = slider.getPlace();
-            if (!slider.held
-                && between(mouse.x, slider.x, slider.y + slider.length)
-                && between(mouse.y, slider.y, slider.y + slider.height)
-            ) {
-              slider.hold();
-              slider.setPlace(mouse.x)
-            }
+
+          let x = slider.getPlace();
+          if (!slider.held
+              && between(mouse.x, slider.x, slider.y + slider.length)
+              && between(mouse.y, slider.y, slider.y + slider.height)
+          ) {
+            slider.hold();
+            slider.setPlace(mouse.x)
+          }
         }
 
         this.canvas.addEventListener('mousedown', mouseDownCallback);
@@ -153,9 +166,22 @@
       if (this.slider.held) {
         this.deltaTheta = Math.PI * 2 * this.slider.getRatio();
       }
+      else if (this.holding) {
+        this.deltaTheta = -Math.tanh(
+          (centerY - this.mouseXY[1]) / (centerX - this.mouseXY[0])
+        );
+      }
 
       if (this.sizeSlider.held) {
         this.shrinkFactor = 0.93 +  0.3 * this.sizeSlider.getRatio();
+      }
+      else if (this.holding) {
+        let diagonal = Math.hypot(canvasWidth / 2, canvasHeight / 2);
+        let x = centerX - this.mouseXY[0];
+        let y = centerY - this.mouseXY[1];
+        let distRatio = Math.hypot(x, y) / diagonal;
+
+        this.shrinkFactor = 0.9 + 0.3 * distRatio;
       }
 
       this.frame.draw();
@@ -318,7 +344,36 @@
 
         this.ctx.lineTo(this.center[0] - pointA[0],this.center[1] -  pointA[1]);
 
-        this.ctx.strokeStyle = this.getColor();
+        const swapColors = (rgbStr) => {
+          let vals = rgbStr.split(",");
+          let r = parseInt(vals[0].split("(")[1]);
+          let g = parseInt(vals[1]);
+          let b = parseInt(vals[2].replace(")", ""));
+          let rgb = [r, g, b]
+
+          let i = rgb.indexOf(Math.max(...rgb));
+          if (i === 0) {
+            // Rotate colors right
+            return "rgb(" + b + "," + r + "," + g + ")";
+          }
+          else if (i === 1) {
+            // Rotate colors left
+            return "rgb(" + g + "," + b + "," + r + ")";
+          }
+          // Swap blue and red
+          return "rgb(" + b + ", " + g + ", " + r + ")";
+        }
+
+        var linearGradient1 = this.ctx.createLinearGradient(
+          this.center[0] - pointA[0],
+          this.center[1] - pointA[1],
+          this.center[0] - pointC[0],
+          this.center[1] - pointC[1]);
+
+        linearGradient1.addColorStop(0, this.getColor());
+        linearGradient1.addColorStop(1, swapColors(this.getColor()));
+
+        this.ctx.strokeStyle = linearGradient1;
         this.ctx.stroke();
 
         this.subFrame.draw()
