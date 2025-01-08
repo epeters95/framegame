@@ -19,15 +19,19 @@
       this.theta = Math.tanh(this.frameWidth / this.frameHeight)
 
 
-      this.shrinkFactor = 0.93;
+      this.shrinkFactor = 0.995;
       this.deltaTheta = 0;
-      this.depth = 15;
+      this.depth = 30;
 
       this.bgColor = "black";
       this.fgColor = "white";
 
       this.holding = false;
       this.mouseXY = [0, 0];
+
+      this.idleDelta = 0;
+      this.idleInc = 0.0005;
+      this.shrinkInc = 0.0001;
 
 
       const sliderStart = 0;
@@ -158,10 +162,16 @@
     }
 
     draw() {
+
+      if (this.idleDelta > (10 * Math.PI)) {
+        this.idleDelta = 0;
+      }
+      this.idleDelta += this.idleInc;
+
       // Fill background
-      this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-      this.ctx.fillStyle = this.bgColor;
-      this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      // this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      // this.ctx.fillStyle = this.bgColor;
+      // this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
       if (this.slider.held) {
         this.deltaTheta = Math.PI * 2 * this.slider.getRatio();
@@ -182,6 +192,18 @@
         let distRatio = Math.hypot(x, y) / diagonal;
 
         this.shrinkFactor = 0.9 + 0.3 * distRatio;
+      }
+
+      if (!this.slider.held && !this.sizeSlider.held && !this.holding) {
+        this.deltaTheta = this.idleDelta;
+
+        if (this.shrinkFactor >= 1 && this.shrinkInc < 0) {
+          this.shrinkInc = this.shrinkInc * -1;
+        }
+        else if (this.shrinkFactor <= 0.8 && this.shrinkInc > 0) {
+          this.shrinkInc = this.shrinkInc * -1
+        }
+        this.shrinkFactor -= this.shrinkInc;
       }
 
       this.frame.draw();
@@ -254,8 +276,8 @@
 
       } else {
 
-        this.sinRef = (angle) => parent.sin(angle + this.getDeltaTheta())
-        this.cosRef = (angle) => parent.cos(angle + this.getDeltaTheta())
+        this.sinRef = (angle) => parent.cos(angle + this.getDeltaTheta())
+        this.cosRef = (angle) => parent.sin(angle + this.getDeltaTheta())
 
         this.translateRef = ([x, y]) => {
           let marginX = width * (1 - this.reductionRate) / 2
@@ -290,9 +312,44 @@
     }
 
     getColor() {
-      let minDepth = this.depth * (this.getDeltaTheta());
-      minDepth = Math.max(1, minDepth);
-      return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth)) + ")"; 
+      const hue = (period, interval, t) => {
+
+        let maxF = (t) => 255 + 0.5 * Math.sin(t);
+        let minF = (t) => 0.5 * Math.sin(t);
+        let incF = (t) => (255 / interval) * ((t + period) % interval);
+        let decF = (t) => (255 / interval) * (interval - ((t + period) % interval));
+
+        let fArray = [
+          [ maxF, incF, minF ],
+          [ decF, maxF, minF ],
+          [ minF, maxF, incF ],
+          [ minF, decF, maxF ],
+          [ incF, minF, maxF ],
+          [ maxF, minF, decF ]
+        ];
+
+        let i = Math.floor( (t + period) / interval) % 6
+        if (fArray[i] === undefined) {
+          return null;
+        }
+        return fArray[i].map( (f, idx) => {
+          let resultHue = Math.round(f(t))
+          return resultHue;
+        })
+      };
+
+      let maxDepth = Math.PI * 2;
+      let interval = maxDepth / 6.0;
+
+      let colors = hue((this.depth / 10), interval, Math.abs(((Math.PI * 2) - this.getDeltaTheta()) * 8))
+
+
+      // let minDepth = this.depth * (this.getDeltaTheta());
+      // minDepth = Math.max(1, minDepth);
+
+
+      // return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth)) + ")";
+      return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")"; 
     }
 
     sin(angle) {
@@ -352,16 +409,16 @@
           let rgb = [r, g, b]
 
           let i = rgb.indexOf(Math.max(...rgb));
-          if (i === 0) {
-            // Rotate colors right
-            return "rgb(" + b + "," + r + "," + g + ")";
-          }
-          else if (i === 1) {
-            // Rotate colors left
+          // if (i === 0) {
+          //   // Rotate colors right
+          //   return "rgb(" + b + "," + r + "," + g + ")";
+          // }
+          // else if (i === 1) {
+          //   // Rotate colors left
             return "rgb(" + g + "," + b + "," + r + ")";
-          }
+          // }
           // Swap blue and red
-          return "rgb(" + b + ", " + g + ", " + r + ")";
+          // return "rgb(" + b + ", " + g + ", " + r + ")";
         }
 
         var linearGradient1 = this.ctx.createLinearGradient(
@@ -371,7 +428,8 @@
           this.center[1] - pointC[1]);
 
         linearGradient1.addColorStop(0, this.getColor());
-        linearGradient1.addColorStop(1, swapColors(this.getColor()));
+        linearGradient1.addColorStop(0.5, swapColors(this.getColor()));
+        linearGradient1.addColorStop(1, swapColors(swapColors(this.getColor())))
 
         this.ctx.strokeStyle = linearGradient1;
         this.ctx.stroke();
