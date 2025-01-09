@@ -272,12 +272,14 @@
 
         this.sinRef = Math.sin;
         this.cosRef = Math.cos;
+        this.tanRef = Math.tan;
         this.translateRef = (arr) => arr;
 
       } else {
 
         this.sinRef = (angle) => parent.cos(angle + this.getDeltaTheta())
         this.cosRef = (angle) => parent.sin(angle + this.getDeltaTheta())
+        this.tanRef = (angle) => parent.tan(angle + this.getDeltaTheta())
 
         this.translateRef = ([x, y]) => {
           let marginX = width * (1 - this.reductionRate) / 2
@@ -314,7 +316,7 @@
     getColor() {
       const hue = (period, interval, t) => {
 
-        let maxF = (t) => 255 + 0.5 * Math.sin(t);
+        let maxF = (t) => 255; + 0.5 * Math.sin(t);
         let minF = (t) => 0.5 * Math.sin(t);
         let incF = (t) => (255 / interval) * ((t + period) % interval);
         let decF = (t) => (255 / interval) * (interval - ((t + period) % interval));
@@ -349,7 +351,7 @@
 
 
       // return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth)) + ")";
-      return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")"; 
+      return "rgb(" + colors[2] + "," + colors[1] + "," + colors[0] + ")"; 
     }
 
     sin(angle) {
@@ -358,6 +360,10 @@
 
     cos(angle) {
       return this.cosRef(angle)
+    }
+
+    tan(angle) {
+      return this.tanRef(angle)
     }
 
     translateXY([x, y]) {
@@ -403,19 +409,30 @@
 
         const swapColors = (rgbStr) => {
           let vals = rgbStr.split(",");
-          let r = parseInt(vals[0].split("(")[1]);
-          let g = parseInt(vals[1]);
-          let b = parseInt(vals[2].replace(")", ""));
-          let rgb = [r, g, b]
+          // let r = parseInt(vals[0].split("(")[1]);
+          // let g = parseInt(vals[1]);
+          // let b = parseInt(vals[2].replace(")", ""));
+          // let rgb = [r, g, b]
 
-          let i = rgb.indexOf(Math.max(...rgb));
+          let r = parseInt(vals[0].split("(")[1]) * Math.PI / 255;
+          let g = parseInt(vals[1]) * Math.PI / 255;
+          let b = parseInt(vals[2].replace(")", "")) * Math.PI / 255;
+          let rgb = [90 * this.tanRef(r), 90* this.tanRef(g), 90* this.sinRef(b)]
+
+          // let avg = (Math.abs(rgb[0]) + parseInt(vals[0].split("(")[1])) / 2
+          // let avg2 = (Math.abs(rgb[1]) + parseInt(vals[1])) / 2
+          // let avg3 = (Math.abs(rgb[2]) + parseInt(vals[2].replace(")", ""))) / 2
+
+          // let i = rgb.indexOf(Math.max(...rgb));
           // if (i === 0) {
           //   // Rotate colors right
-          //   return "rgb(" + b + "," + r + "," + g + ")";
+             let str = "rgb(" + Math.abs(rgb[2]) + "," + Math.abs(rgb[0]) + "," + Math.abs(rgb[1]) + ")";
+             // console.log(str)
+             return str
           // }
           // else if (i === 1) {
           //   // Rotate colors left
-            return "rgb(" + g + "," + b + "," + r + ")";
+          //   return "rgb(" + g + "," + b + "," + r + ")";
           // }
           // Swap blue and red
           // return "rgb(" + b + ", " + g + ", " + r + ")";
@@ -427,9 +444,13 @@
           this.center[0] - pointC[0],
           this.center[1] - pointC[1]);
 
-        linearGradient1.addColorStop(0, this.getColor());
-        linearGradient1.addColorStop(0.5, swapColors(this.getColor()));
-        linearGradient1.addColorStop(1, swapColors(swapColors(this.getColor())))
+
+        let rgbStr = this.getColor();
+        let rgbStr2 = swapColors(rgbStr);
+
+        linearGradient1.addColorStop(0, rgbStr);
+        linearGradient1.addColorStop(0.5, rgbStr2);
+        linearGradient1.addColorStop(1, swapColors(rgbStr2))
 
         this.ctx.strokeStyle = linearGradient1;
         this.ctx.stroke();
