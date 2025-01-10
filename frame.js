@@ -33,6 +33,8 @@
       this.idleInc = 0.0005;
       this.shrinkInc = 0.0001;
 
+      this.fillBackground = false;
+
 
       const sliderStart = 0;
       const sliderLength       = 860;
@@ -169,9 +171,11 @@
       this.idleDelta += this.idleInc;
 
       // Fill background
-      // this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-      // this.ctx.fillStyle = this.bgColor;
-      // this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      if (this.fillBackground) {
+        this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        this.ctx.fillStyle = this.bgColor;
+        this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      }
 
       if (this.slider.held) {
         this.deltaTheta = Math.PI * 2 * this.slider.getRatio();
@@ -346,12 +350,16 @@
       let colors = hue((this.depth / 10), interval, Math.abs(((Math.PI * 2) - this.getDeltaTheta()) * 8))
 
 
-      // let minDepth = this.depth * (this.getDeltaTheta());
-      // minDepth = Math.max(1, minDepth);
+      let minDepth = (1.0 / this.depth) * (this.getDeltaTheta());
+      minDepth = Math.max(1, minDepth);
+
+      let redShifted   = colors[0] + (Math.cos(minDepth)) / 2
+      let greenShifted = colors[1] + (this.cosRef(minDepth)) / 2
+      let blueShifted  = colors[2] + (this.sinRef(minDepth)) / 2
 
 
       // return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth)) + ")";
-      return "rgb(" + colors[2] + "," + colors[1] + "," + colors[0] + ")"; 
+      return "rgb(" + blueShifted + "," + greenShifted + "," + redShifted + ")"; 
     }
 
     sin(angle) {
