@@ -318,9 +318,12 @@
     }
 
     getColor() {
+      const sigmoid = (z) => {
+        return 2 * Math.PI / (1 + Math.exp(-z + Math.PI));
+      }
       const hue = (period, interval, t) => {
 
-        let maxF = (t) => 255; + 0.5 * Math.sin(t);
+        let maxF = (t) => 255;// + 0.5 * Math.sin(t);
         let minF = (t) => 0.5 * Math.sin(t);
         let incF = (t) => (255 / interval) * ((t + period) % interval);
         let decF = (t) => (255 / interval) * (interval - ((t + period) % interval));
@@ -328,8 +331,8 @@
         let fArray = [
           [ maxF, incF, minF ],
           [ decF, maxF, minF ],
-          [ minF, maxF, incF ],
-          [ minF, decF, maxF ],
+          [ minF, maxF, (t) => incF(sigmoid(t)) ],
+          [ minF, (t) => decF(sigmoid(t)), maxF ],
           [ incF, minF, maxF ],
           [ maxF, minF, decF ]
         ];
@@ -347,7 +350,9 @@
       let maxDepth = Math.PI * 2;
       let interval = maxDepth / 6.0;
 
-      let colors = hue((this.depth / 10), interval, Math.abs(((Math.PI * 2) - this.getDeltaTheta()) * 8))
+      let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
+
+      let colors = hue((this.depth / 10), interval, Math.abs(complAngle * 8))
 
 
       let minDepth = (1.0 / this.depth) * (this.getDeltaTheta());
@@ -359,7 +364,7 @@
 
 
       // return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth)) + ")";
-      return "rgb(" + blueShifted + "," + greenShifted + "," + redShifted + ")"; 
+      return "rgb(" + blueShifted + "," + redShifted + "," + greenShifted + ")"; 
     }
 
     sin(angle) {
