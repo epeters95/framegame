@@ -34,6 +34,7 @@
       this.shrinkInc = 0.0001;
 
       this.fillBackground = false;
+      this.showSliders = false;
 
 
       const sliderStart = 0;
@@ -245,9 +246,11 @@
     step() {
       
       this.draw();
-      this.drawSlider(this.slider);
-      this.drawSlider(this.sizeSlider);
 
+      if (this.showSliders) {
+        this.drawSlider(this.slider);
+        this.drawSlider(this.sizeSlider);
+      }
     }
   }
 
@@ -328,13 +331,16 @@
         let incF = (t) => (255 / interval) * ((t + period) % interval);
         let decF = (t) => (255 / interval) * (interval - ((t + period) % interval));
 
+        let isigF = (t) => incF(sigmoid(t))
+        let dsigF = (t) => decF(sigmoid(t))
+
         let fArray = [
-          [ maxF, incF, minF ],
-          [ decF, maxF, minF ],
-          [ minF, maxF, (t) => incF(sigmoid(t)) ],
-          [ minF, (t) => decF(sigmoid(t)), maxF ],
-          [ incF, minF, maxF ],
-          [ maxF, minF, decF ]
+          [ maxF, isigF, minF ],
+          [ dsigF, maxF, minF ],
+          [ minF, maxF, isigF ],
+          [ minF, dsigF, maxF ],
+          [ isigF, minF, maxF ],
+          [ maxF, minF, dsigF ]
         ];
 
         let i = Math.floor( (t + period) / interval) % 6
