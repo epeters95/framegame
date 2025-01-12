@@ -331,8 +331,8 @@
         let incF = (t) => (255 / interval) * ((t + period) % interval);
         let decF = (t) => (255 / interval) * (interval - ((t + period) % interval));
 
-        let isigF = (t) => incF(sigmoid(t))
-        let dsigF = (t) => decF(sigmoid(t))
+        let isigF = (t) => incF(t);//incF(sigmoid(t))
+        let dsigF = (t) => decF(t);//decF(sigmoid(t))
 
         let fArray = [
           [ maxF, isigF, minF ],
@@ -353,6 +353,7 @@
         })
       };
 
+
       let maxDepth = Math.PI * 2;
       let interval = maxDepth / 6.0;
 
@@ -364,13 +365,48 @@
       let minDepth = (1.0 / this.depth) * (this.getDeltaTheta());
       minDepth = Math.max(1, minDepth);
 
+
+      // Credit: Kamil Kiełczewski
+      // https://stackoverflow.com/questions/8022885/rgb-to-hsv-color-in-javascript
+      const rgb2hsv = (r,g,b) => {
+        let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
+        let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/c));
+        return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
+      }
+
+      const hsv2rgb = (h,s,v) => {
+        let f = (n, k=(n + h / 60) % 6) => v - v*s*Math.max( Math.min(k, 4 - k, 1), 0);
+        return [f(5),f(3),f(1)];
+      }
+
+      let depth = this.depth
+
+
+
       let redShifted   = colors[0] + (Math.cos(minDepth)) / 2
       let greenShifted = colors[1] + (this.cosRef(minDepth)) / 2
       let blueShifted  = colors[2] + (this.sinRef(minDepth)) / 2
 
+      colors = [redShifted, greenShifted, blueShifted]
+
+      // Inkblot transformations
+
+      let hsv = rgb2hsv(...colors)
+      let sv = this.translateRef([hsv[1], hsv[2]])
+
+      let inverseVal = sv[1]
+
+      if (depth % 2 === 0) {
+        inverseVal = 1 - sv[1]
+      }
+      let newCols = hsv2rgb(hsv[0], 1 - sv[0], inverseVal)
+
+      colors = colors.flatMap((c, i) => this.translateRef([newCols[i], newCols[i]])[0])
+
+
 
       // return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth)) + ")";
-      return "rgb(" + blueShifted + "," + redShifted + "," + greenShifted + ")"; 
+      return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
     }
 
     sin(angle) {
@@ -467,9 +503,9 @@
         let rgbStr = this.getColor();
         let rgbStr2 = swapColors(rgbStr);
 
-        linearGradient1.addColorStop(0, rgbStr);
-        linearGradient1.addColorStop(0.5, rgbStr2);
-        linearGradient1.addColorStop(1, swapColors(rgbStr2))
+        linearGradient1.addColorStop(0, swapColors(rgbStr2));
+        linearGradient1.addColorStop(0.5, rgbStr);
+        linearGradient1.addColorStop(1, rgbStr2)
 
         this.ctx.strokeStyle = linearGradient1;
         this.ctx.stroke();
