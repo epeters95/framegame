@@ -372,6 +372,7 @@
         let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
         let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/c));
         return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
+        // return [60 * (h < 0 ? h + 6 : h), v && c/(30 * complAngle), v];
       }
 
       const hsv2rgb = (h,s,v) => {
@@ -406,7 +407,7 @@
 
 
       // return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth)) + ")";
-      return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+      return "rgba(" + colors[0] + "," + colors[1] + "," + colors[2] + ',' + (1 - complAngle) + ")";
     }
 
     sin(angle) {
@@ -473,10 +474,10 @@
           // let b = parseInt(vals[2].replace(")", ""));
           // let rgb = [r, g, b]
 
-          let r = parseInt(vals[0].split("(")[1]) * Math.PI / 255;
-          let g = parseInt(vals[1]) * Math.PI / 255;
-          let b = parseInt(vals[2].replace(")", "")) * Math.PI / 255;
-          let rgb = [90 * this.sinRef(r), 90* this.sinRef(g), 90* this.sinRef(b)]
+          let r = parseInt(vals[0].split("(")[1]) * 1.1 * Math.PI / 255;
+          let g = parseInt(vals[1]) * 1.1 * Math.PI / 255;
+          let b = parseInt(vals[2].replace(")", "")) * 1.1 * Math.PI / 255;
+          let rgb = [120 * this.sinRef(r), 120* this.sinRef(g),120* this.sinRef(b)]
 
           // let avg = (Math.abs(rgb[0]) + parseInt(vals[0].split("(")[1])) / 2
           // let avg2 = (Math.abs(rgb[1]) + parseInt(vals[1])) / 2
