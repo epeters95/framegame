@@ -370,7 +370,7 @@
       // https://stackoverflow.com/questions/8022885/rgb-to-hsv-color-in-javascript
       const rgb2hsv = (r,g,b) => {
         let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
-        let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/c));
+        let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/complAngle));
         return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
         // return [60 * (h < 0 ? h + 6 : h), v && c/(30 * complAngle), v];
       }
