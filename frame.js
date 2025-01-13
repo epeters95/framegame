@@ -397,11 +397,11 @@
       let inverseVal = sv[1]
 
       if (depth % 2 === 0) {
-        inverseVal = 1 - sv[1]
+        // inverseVal = 1 - sv[1]
       }
       let newCols = hsv2rgb(hsv[0], 1 - sv[0], inverseVal)
 
-      colors = colors.flatMap((c, i) => this.translateRef([newCols[i], newCols[i]])[0])
+      colors = colors.flatMap((c, i) => newCols[i])
 
 
 
@@ -449,6 +449,8 @@
 
         let pointD = this.translateXY([ -1 * newWidthR, -1 * newHeightR])
 
+        // let pointCD = this.translateXY([0, -(newHeightL + newHeightR) / 2])
+
         // Trace 4 paths
         this.ctx.beginPath();
 
@@ -457,6 +459,8 @@
         this.ctx.lineTo(this.center[0] - pointB[0],this.center[1] -  pointB[1]);
 
         this.ctx.lineTo(this.center[0] - pointC[0],this.center[1] -  pointC[1]);
+
+        // this.ctx.lineTo(this.center[0] - pointCD[0],this.center[1] -  pointCD[1]);
 
         this.ctx.lineTo(this.center[0] - pointD[0],this.center[1] -  pointD[1]);
 
@@ -472,7 +476,7 @@
           let r = parseInt(vals[0].split("(")[1]) * Math.PI / 255;
           let g = parseInt(vals[1]) * Math.PI / 255;
           let b = parseInt(vals[2].replace(")", "")) * Math.PI / 255;
-          let rgb = [90 * this.tanRef(r), 90* this.tanRef(g), 90* this.sinRef(b)]
+          let rgb = [90 * this.sinRef(r), 90* this.sinRef(g), 90* this.sinRef(b)]
 
           // let avg = (Math.abs(rgb[0]) + parseInt(vals[0].split("(")[1])) / 2
           // let avg2 = (Math.abs(rgb[1]) + parseInt(vals[1])) / 2
@@ -481,7 +485,7 @@
           // let i = rgb.indexOf(Math.max(...rgb));
           // if (i === 0) {
           //   // Rotate colors right
-             let str = "rgb(" + Math.abs(rgb[2]) + "," + Math.abs(rgb[0]) + "," + Math.abs(rgb[1]) + ")";
+             let str = "rgb(" + Math.abs(rgb[1]) + "," + Math.abs(rgb[2]) + "," + Math.abs(rgb[0]) + ")";
              // console.log(str)
              return str
           // }
