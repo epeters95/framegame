@@ -13,8 +13,8 @@
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
-      this.frameWidth = canvasWidth / 2;
-      this.frameHeight = canvasHeight / 2;
+      this.frameWidth = canvasHeight;
+      this.frameHeight = canvasHeight;
 
       this.theta = Math.tanh(this.frameWidth / this.frameHeight)
 
@@ -143,7 +143,7 @@
 
       })
 
-      let radius = Math.hypot(canvasWidth / 2, canvasHeight / 2)
+      let radius = Math.hypot(this.frameWidth / 2, this.frameHeight / 2)
 
       this.frame = new Frame(
         this.canvas,
@@ -182,21 +182,22 @@
         this.deltaTheta = Math.PI * 2 * this.slider.getRatio();
       }
       else if (this.holding) {
-        this.deltaTheta = -Math.tanh(
-          (centerY - this.mouseXY[1]) / (centerX - this.mouseXY[0])
-        );
+        // this.deltaTheta = -Math.tanh(
+        //   (centerY - this.mouseXY[1]) / (centerX - this.mouseXY[0])
+        // );
       }
 
       if (this.sizeSlider.held) {
         this.shrinkFactor = 0.93 +  0.3 * this.sizeSlider.getRatio();
       }
       else if (this.holding) {
-        let diagonal = Math.hypot(canvasWidth / 2, canvasHeight / 2);
+        let diagonal = Math.hypot(this.frameWidth / 2, this.frameWidth / 2);
         let x = centerX - this.mouseXY[0];
         let y = centerY - this.mouseXY[1];
         let distRatio = Math.hypot(x, y) / diagonal;
 
         this.shrinkFactor = 0.9 + 0.3 * distRatio;
+        this.deltaTheta = this.shrinkFactor * 0.1
       }
 
       if (!this.slider.held && !this.sizeSlider.held && !this.holding) {
@@ -402,12 +403,12 @@
       }
       let newCols = hsv2rgb(hsv[0], 1 - sv[0], inverseVal)
 
-      colors = colors.flatMap((c, i) => newCols[i])
+      colors = colors.flatMap((c, i) => 255 - newCols[i])
 
 
 
       // return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth)) + ")";
-      return "rgba(" + colors[0] + "," + colors[1] + "," + colors[2] + ',' + (1 - complAngle) + ")";
+      return "rgba(" + colors[2] + "," + colors[0] + "," + colors[1] + ',' + (1 - complAngle) + ")";
     }
 
     sin(angle) {
@@ -452,6 +453,8 @@
 
         // let pointCD = this.translateXY([0, -(newHeightL + newHeightR) / 2])
 
+        let pointCD = [pointD[1] - pointC[1], pointD[0] - pointC[0]]
+
         // Trace 4 paths
         this.ctx.beginPath();
 
@@ -461,9 +464,8 @@
 
         this.ctx.lineTo(this.center[0] - pointC[0],this.center[1] -  pointC[1]);
 
-        // this.ctx.lineTo(this.center[0] - pointCD[0],this.center[1] -  pointCD[1]);
-
-        this.ctx.lineTo(this.center[0] - pointD[0],this.center[1] -  pointD[1]);
+        // this.ctx.lineTo(this.center[0] - pointD[0],this.center[1] -  pointD[1]);
+        this.ctx.lineTo(this.center[0] - pointCD[0],this.center[1] -  pointCD[1]);
 
         this.ctx.lineTo(this.center[0] - pointA[0],this.center[1] -  pointA[1]);
 
