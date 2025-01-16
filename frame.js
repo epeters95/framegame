@@ -181,11 +181,11 @@
       if (this.slider.held) {
         this.deltaTheta = Math.PI * 2 * this.slider.getRatio();
       }
-      else if (this.holding) {
+      // else if (this.holding) {
         // this.deltaTheta = -Math.tanh(
         //   (centerY - this.mouseXY[1]) / (centerX - this.mouseXY[0])
         // );
-      }
+      // }
 
       if (this.sizeSlider.held) {
         this.shrinkFactor = 0.93 +  0.3 * this.sizeSlider.getRatio();
@@ -197,16 +197,15 @@
         let distRatio = Math.hypot(x, y) / diagonal;
 
         this.shrinkFactor = 0.9 + 0.3 * distRatio;
-        this.deltaTheta = this.shrinkFactor * 0.1
+        this.deltaTheta = this.idleDelta / 2;
       }
 
       if (!this.slider.held && !this.sizeSlider.held && !this.holding) {
         this.deltaTheta = this.idleDelta;
 
-        if (this.shrinkFactor >= 1 && this.shrinkInc < 0) {
-          this.shrinkInc = this.shrinkInc * -1;
-        }
-        else if (this.shrinkFactor <= 0.8 && this.shrinkInc > 0) {
+        if (this.shrinkFactor >= 1 && this.shrinkInc < 0 ||
+            this.shrinkFactor <= 0.8 && this.shrinkInc > 0) {
+          
           this.shrinkInc = this.shrinkInc * -1
         }
         this.shrinkFactor -= this.shrinkInc;
