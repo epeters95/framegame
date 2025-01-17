@@ -7,6 +7,9 @@
   const centerX = Math.floor(canvasWidth / 2);
   const centerY = Math.floor(canvasHeight / 2);
 
+  const maxHue = 255;
+  const numIntervals = 6;
+
 
   class Display {
     constructor(canvas) {
@@ -15,9 +18,9 @@
 
       this.frameWidth = canvasHeight;
       this.frameHeight = canvasHeight;
+      this.frameRate = 30;
 
-      this.theta = Math.tanh(this.frameWidth / this.frameHeight)
-
+      this.theta = Math.tanh(this.frameWidth / this.frameHeight);
 
       this.shrinkFactor = 0.995;
       this.deltaTheta = 0;
@@ -36,6 +39,8 @@
       this.fillBackground = false;
       this.showSliders = false;
 
+      this.minShrinkRate = 0.8;
+      this.shrinkDelta = 0.3;
 
       const sliderStart = 0;
       const sliderLength       = 860;
@@ -196,7 +201,7 @@
         let y = centerY - this.mouseXY[1];
         let distRatio = Math.hypot(x, y) / diagonal;
 
-        this.shrinkFactor = 0.9 + 0.3 * distRatio;
+        this.shrinkFactor = this.minShrinkRate + this.shrinkDelta * distRatio;
         this.deltaTheta = this.idleDelta / 2;
       }
 
@@ -204,8 +209,8 @@
         this.deltaTheta = this.idleDelta;
 
         if (this.shrinkFactor >= 1 && this.shrinkInc < 0 ||
-            this.shrinkFactor <= 0.8 && this.shrinkInc > 0) {
-          
+            this.shrinkFactor <= this.minShrinkRate && this.shrinkInc > 0) {
+
           this.shrinkInc = this.shrinkInc * -1
         }
         this.shrinkFactor -= this.shrinkInc;
@@ -239,7 +244,7 @@
 
     start() {
 
-      this.windowID = window.setInterval(this.step.bind(this), 30);
+      this.windowID = window.setInterval(this.step.bind(this), this.frameRate);
     }
     
     
@@ -268,6 +273,10 @@
       this.getDeltaTheta = getDeltaTheta;
       this.getReductionRate = getReductionRate;
       this.reductionRate = getReductionRate();
+
+      this.periodDepthDivisor = 10;
+      this.tAngleMultiplier = 8;
+      this.curveMultiplier = 120;
 
       this.getDepth = getDepth;
       this.depth = getDepth();
@@ -326,10 +335,10 @@
       }
       const hue = (period, interval, t) => {
 
-        let maxF = (t) => 255;// + 0.5 * Math.sin(t);
+        let maxF = (t) => maxHue;// + 0.5 * Math.sin(t);
         let minF = (t) => 0.5 * Math.sin(t);
-        let incF = (t) => (255 / interval) * ((t + period) % interval);
-        let decF = (t) => (255 / interval) * (interval - ((t + period) % interval));
+        let incF = (t) => (maxHue / interval) * ((t + period) % interval);
+        let decF = (t) => (maxHue / interval) * (interval - ((t + period) % interval));
 
         let isigF = (t) => incF(t);//incF(sigmoid(t))
         let dsigF = (t) => decF(t);//decF(sigmoid(t))
@@ -343,7 +352,7 @@
           [ maxF, minF, dsigF ]
         ];
 
-        let i = Math.floor( (t + period) / interval) % 6
+        let i = Math.floor( (t + period) / interval) % numIntervals
         if (fArray[i] === undefined) {
           return null;
         }
@@ -355,11 +364,11 @@
 
 
       let maxDepth = Math.PI * 2;
-      let interval = maxDepth / 6.0;
+      let interval = maxDepth / numIntervals;
 
       let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
 
-      let colors = hue((this.depth / 10), interval, Math.abs(complAngle * 8))
+      let colors = hue((this.depth / this.periodDepthDivisor), interval, Math.abs(complAngle * this.tAngleMultiplier))
 
 
       let minDepth = (1.0 / this.depth) * (this.getDeltaTheta());
@@ -397,16 +406,18 @@
 
       let inverseVal = sv[1]
 
-      if (depth % 2 === 0) {
+      // Opposite frames invert colors
+
+      // if (depth % 2 === 0) {
         // inverseVal = 1 - sv[1]
-      }
+      // }
       let newCols = hsv2rgb(hsv[0], 1 - sv[0], inverseVal)
 
-      colors = colors.flatMap((c, i) => 255 - newCols[i])
+      colors = colors.flatMap((c, i) => maxHue - newCols[i])
 
 
 
-      // return "rgb(" + (255 / this.sinRef(minDepth)) + "," + (255 / this.cosRef(minDepth + 2)) + "," + (255 / (minDepth)) + ")";
+      // return "rgb(" + (maxHue / this.sinRef(minDepth)) + "," + (maxHue / this.cosRef(minDepth + 2)) + "," + (maxHue / (minDepth)) + ")";
       return "rgba(" + colors[2] + "," + colors[0] + "," + colors[1] + ',' + (1 - complAngle) + ")";
     }
 
@@ -475,10 +486,10 @@
           // let b = parseInt(vals[2].replace(")", ""));
           // let rgb = [r, g, b]
 
-          let r = parseInt(vals[0].split("(")[1]) * 1.1 * Math.PI / 255;
-          let g = parseInt(vals[1]) * 1.1 * Math.PI / 255;
-          let b = parseInt(vals[2].replace(")", "")) * 1.1 * Math.PI / 255;
-          let rgb = [120 * this.sinRef(r), 120* this.sinRef(g),120* this.sinRef(b)]
+          let r = parseInt(vals[0].split("(")[1]) * 1.1 * Math.PI / maxHue;
+          let g = parseInt(vals[1]) * 1.1 * Math.PI / maxHue;
+          let b = parseInt(vals[2].replace(")", "")) * 1.1 * Math.PI / maxHue;
+          let rgb = [this.curveMultiplier * this.sinRef(r), this.curveMultiplier * this.sinRef(g), this.curveMultiplier * this.sinRef(b)]
 
           // let avg = (Math.abs(rgb[0]) + parseInt(vals[0].split("(")[1])) / 2
           // let avg2 = (Math.abs(rgb[1]) + parseInt(vals[1])) / 2
