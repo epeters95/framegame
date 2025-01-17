@@ -48,10 +48,10 @@
       const sliderY = 0;
       const sliderHeight = 20;
 
-      this.slider = new Slider(sliderX, sliderY, sliderStart, sliderLength)
-      this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - (sliderHeight + 10), sliderStart, sliderLength)
+      // this.slider = new Slider(sliderX, sliderY, sliderStart, sliderLength)
+      // this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - (sliderHeight + 10), sliderStart, sliderLength)
 
-      this.sliders = [this.slider, this.sizeSlider]
+      // this.sliders = [this.slider, this.sizeSlider]
 
       this.canvas.addEventListener('mousedown', () => {
         this.holding = true;
@@ -79,74 +79,74 @@
 
       // Add general click listeners for all sliders
 
-      this.sliders.forEach((slider) => {
+      // this.sliders.forEach((slider) => {
 
-        const mouseDownCallback = (e) => {
-          // mouse position relative to the browser window
-          const mouse = { 
-            x: e.pageX - canvasPosition.x,
-            y: e.pageY - canvasPosition.y
-          }
+      //   const mouseDownCallback = (e) => {
+      //     // mouse position relative to the browser window
+      //     const mouse = { 
+      //       x: e.pageX - canvasPosition.x,
+      //       y: e.pageY - canvasPosition.y
+      //     }
 
-          const between = (a, b, c) => { return (a >= b && a <= c) };
+      //     const between = (a, b, c) => { return (a >= b && a <= c) };
 
-          let x = slider.getPlace();
-          if (!slider.held
-              && between(mouse.x, slider.x, slider.y + slider.length)
-              && between(mouse.y, slider.y, slider.y + slider.height)
-          ) {
-            slider.hold();
-            slider.setPlace(mouse.x)
-          }
-        }
+      //     let x = slider.getPlace();
+      //     if (!slider.held
+      //         && between(mouse.x, slider.x, slider.y + slider.length)
+      //         && between(mouse.y, slider.y, slider.y + slider.height)
+      //     ) {
+      //       slider.hold();
+      //       slider.setPlace(mouse.x)
+      //     }
+      //   }
 
-        this.canvas.addEventListener('mousedown', mouseDownCallback);
-        this.canvas.addEventListener('touchstart', (e) => {
+      //   this.canvas.addEventListener('mousedown', mouseDownCallback);
+      //   this.canvas.addEventListener('touchstart', (e) => {
 
-          this.canvas.dispatchEvent(new MouseEvent('mousedown', {
-            clientX: e.touches[0].clientX,
-            clientY: e.touches[0].clientY
-          }));
+      //     this.canvas.dispatchEvent(new MouseEvent('mousedown', {
+      //       clientX: e.touches[0].clientX,
+      //       clientY: e.touches[0].clientY
+      //     }));
 
-        });
+      //   });
 
         
-        // Mouse Up / Touch end
+      //   // Mouse Up / Touch end
 
-        const mouseUpCallback = () => {
-          slider.letgo();
-        }
-        this.canvas.addEventListener('mouseup', mouseUpCallback);
-        this.canvas.addEventListener('touchend', mouseUpCallback);
+      //   const mouseUpCallback = () => {
+      //     slider.letgo();
+      //   }
+      //   this.canvas.addEventListener('mouseup', mouseUpCallback);
+      //   this.canvas.addEventListener('touchend', mouseUpCallback);
 
 
-        // Mouse Move / Touch move
-        const mouseMoveCallback = (e) => {
+      //   // Mouse Move / Touch move
+      //   const mouseMoveCallback = (e) => {
 
-          if (slider.held) {
-            const mouse = {
-              x: e.pageX - canvasPosition.x,
-              y: e.pageY - canvasPosition.y
-            }
-            slider.leftWidth = mouse.x - slider.x;
+      //     if (slider.held) {
+      //       const mouse = {
+      //         x: e.pageX - canvasPosition.x,
+      //         y: e.pageY - canvasPosition.y
+      //       }
+      //       slider.leftWidth = mouse.x - slider.x;
 
-            if (slider.x > sliderStart + sliderLength) {
-              slider.x = sliderStart + sliderLength;
-            }
-          }
+      //       if (slider.x > sliderStart + sliderLength) {
+      //         slider.x = sliderStart + sliderLength;
+      //       }
+      //     }
 
-        }
-        this.canvas.addEventListener('mousemove', mouseMoveCallback);
-        this.canvas.addEventListener('touchmove', (e) => {
+      //   }
+      //   this.canvas.addEventListener('mousemove', mouseMoveCallback);
+      //   this.canvas.addEventListener('touchmove', (e) => {
     
-          this.canvas.dispatchEvent(new MouseEvent('mousemove', {
-            clientX: e.touches[0].clientX,
-            clientY: e.touches[0].clientY
-          }));
+      //     this.canvas.dispatchEvent(new MouseEvent('mousemove', {
+      //       clientX: e.touches[0].clientX,
+      //       clientY: e.touches[0].clientY
+      //     }));
 
-        });
+      //   });
 
-      })
+      // })
 
       let radius = Math.hypot(this.frameWidth / 2, this.frameHeight / 2)
 
@@ -183,19 +183,19 @@
         this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
       }
 
-      if (this.slider.held) {
-        this.deltaTheta = Math.PI * 2 * this.slider.getRatio();
-      }
+      // if (this.slider.held) {
+      //   this.deltaTheta = Math.PI * 2 * this.slider.getRatio();
+      // }
       // else if (this.holding) {
         // this.deltaTheta = -Math.tanh(
         //   (centerY - this.mouseXY[1]) / (centerX - this.mouseXY[0])
         // );
       // }
 
-      if (this.sizeSlider.held) {
-        this.shrinkFactor = 0.93 +  0.3 * this.sizeSlider.getRatio();
-      }
-      else if (this.holding) {
+      // if (this.sizeSlider.held) {
+      //   this.shrinkFactor = 0.93 +  0.3 * this.sizeSlider.getRatio();
+      // }
+      if (this.holding) {
         let diagonal = Math.hypot(this.frameWidth / 2, this.frameWidth / 2);
         let x = centerX - this.mouseXY[0];
         let y = centerY - this.mouseXY[1];
@@ -205,7 +205,7 @@
         this.deltaTheta = this.idleDelta / 2;
       }
 
-      if (!this.slider.held && !this.sizeSlider.held && !this.holding) {
+      else {
         this.deltaTheta = this.idleDelta;
 
         if (this.shrinkFactor >= 1 && this.shrinkInc < 0 ||
@@ -252,10 +252,10 @@
       
       this.draw();
 
-      if (this.showSliders) {
-        this.drawSlider(this.slider);
-        this.drawSlider(this.sizeSlider);
-      }
+      // if (this.showSliders) {
+      //   this.drawSlider(this.slider);
+      //   this.drawSlider(this.sizeSlider);
+      // }
     }
   }
 
