@@ -48,7 +48,7 @@
       const sliderY = 0;
       const sliderHeight = 20;
 
-      // this.slider = new Slider(sliderX, sliderY, sliderStart, sliderLength)
+      this.slider = new Slider(this.canvas, sliderX, sliderY, sliderStart, sliderLength)
       // this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - (sliderHeight + 10), sliderStart, sliderLength)
 
       // this.sliders = [this.slider, this.sizeSlider]
@@ -71,82 +71,6 @@
       this.canvas.addEventListener('mouseup', () => {
         this.holding = false;
       })
-
-      const canvasPosition = {
-        x: this.canvas.offsetLeft,
-        y: this.canvas.offsetTop
-      };
-
-      // Add general click listeners for all sliders
-
-      // this.sliders.forEach((slider) => {
-
-      //   const mouseDownCallback = (e) => {
-      //     // mouse position relative to the browser window
-      //     const mouse = { 
-      //       x: e.pageX - canvasPosition.x,
-      //       y: e.pageY - canvasPosition.y
-      //     }
-
-      //     const between = (a, b, c) => { return (a >= b && a <= c) };
-
-      //     let x = slider.getPlace();
-      //     if (!slider.held
-      //         && between(mouse.x, slider.x, slider.y + slider.length)
-      //         && between(mouse.y, slider.y, slider.y + slider.height)
-      //     ) {
-      //       slider.hold();
-      //       slider.setPlace(mouse.x)
-      //     }
-      //   }
-
-      //   this.canvas.addEventListener('mousedown', mouseDownCallback);
-      //   this.canvas.addEventListener('touchstart', (e) => {
-
-      //     this.canvas.dispatchEvent(new MouseEvent('mousedown', {
-      //       clientX: e.touches[0].clientX,
-      //       clientY: e.touches[0].clientY
-      //     }));
-
-      //   });
-
-        
-      //   // Mouse Up / Touch end
-
-      //   const mouseUpCallback = () => {
-      //     slider.letgo();
-      //   }
-      //   this.canvas.addEventListener('mouseup', mouseUpCallback);
-      //   this.canvas.addEventListener('touchend', mouseUpCallback);
-
-
-      //   // Mouse Move / Touch move
-      //   const mouseMoveCallback = (e) => {
-
-      //     if (slider.held) {
-      //       const mouse = {
-      //         x: e.pageX - canvasPosition.x,
-      //         y: e.pageY - canvasPosition.y
-      //       }
-      //       slider.leftWidth = mouse.x - slider.x;
-
-      //       if (slider.x > sliderStart + sliderLength) {
-      //         slider.x = sliderStart + sliderLength;
-      //       }
-      //     }
-
-      //   }
-      //   this.canvas.addEventListener('mousemove', mouseMoveCallback);
-      //   this.canvas.addEventListener('touchmove', (e) => {
-    
-      //     this.canvas.dispatchEvent(new MouseEvent('mousemove', {
-      //       clientX: e.touches[0].clientX,
-      //       clientY: e.touches[0].clientY
-      //     }));
-
-      //   });
-
-      // })
 
       let radius = Math.hypot(this.frameWidth / 2, this.frameHeight / 2)
 
@@ -541,13 +465,16 @@
 
   class Slider {
 
-    constructor(x, y, leftWidth, length) {
+    constructor(canvas, x, y, leftWidth, length) {
+      this.canvas = canvas;
       this.x = x;
       this.y = y;
       this.leftWidth = leftWidth;
       this.length = length;
       this.held = false;
       this.height = 20;
+
+      this.initMouseListeners();
     }  
 
     getPlace() {
@@ -568,6 +495,73 @@
 
     letgo() {
       this.held = false;
+    }
+
+    initMouseListeners() {
+      const mouseDownCallback = (e) => {
+        // mouse position relative to the browser window
+        const mouse = { 
+          x: e.pageX - this.canvas.offsetLeft,
+          y: e.pageY - this.canvas.offsetTop
+        }
+
+        const between = (a, b, c) => { return (a >= b && a <= c) };
+
+        let x = this.getPlace();
+        if (!this.held
+            && between(mouse.x, this.x, this.y + this.length)
+            && between(mouse.y, this.y, this.y + this.height)
+        ) {
+          this.hold();
+          this.setPlace(mouse.x)
+        }
+      }
+
+      this.canvas.addEventListener('mousedown', mouseDownCallback);
+      this.canvas.addEventListener('touchstart', (e) => {
+
+        this.canvas.dispatchEvent(new MouseEvent('mousedown', {
+          clientX: e.touches[0].clientX,
+          clientY: e.touches[0].clientY
+        }));
+
+      });
+
+      
+      // Mouse Up / Touch end
+
+      const mouseUpCallback = () => {
+        this.letgo();
+      }
+      this.canvas.addEventListener('mouseup', mouseUpCallback);
+      this.canvas.addEventListener('touchend', mouseUpCallback);
+
+
+      // Mouse Move / Touch move
+      const mouseMoveCallback = (e) => {
+
+        if (this.held) {
+          const mouse = {
+            x: e.pageX - this.canvas.offsetLeft,
+            y: e.pageY - this.canvas.offsetTop
+          }
+          this.leftWidth = mouse.x - this.x;
+
+          if (this.x > this.leftWidth + this.length) {
+            this.x = this.leftWidth + this.length;
+          }
+        }
+
+      }
+      this.canvas.addEventListener('mousemove', mouseMoveCallback);
+      this.canvas.addEventListener('touchmove', (e) => {
+  
+        this.canvas.dispatchEvent(new MouseEvent('mousemove', {
+          clientX: e.touches[0].clientX,
+          clientY: e.touches[0].clientY
+        }));
+
+      });
     }
 
   }
