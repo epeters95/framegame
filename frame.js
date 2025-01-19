@@ -143,28 +143,6 @@
       this.frame.draw();
     }
 
-    drawSlider(slider) {
-      let widthL = slider.leftWidth;
-      let widthR = slider.length - widthL;
-      const sliderColor        = 'rgba(200,200,200,0.4)';
-      //Left side
-      this.ctx.beginPath();
-      this.ctx.fillStyle = sliderColor;
-      this.ctx.fillRect(slider.x, slider.y, widthL, slider.height);
-
-      //Slider
-      this.ctx.beginPath();
-      this.ctx.moveTo(slider.x + widthL, slider.y - 2);
-      this.ctx.lineTo(slider.x + widthL, slider.y + slider.height + 2);
-      this.ctx.strokeStyle = 'yellow';
-      this.ctx.stroke();
-
-      //Right Side
-      this.ctx.beginPath();
-      this.ctx.fillStyle = sliderColor;
-      this.ctx.fillRect(slider.x + widthL + 1, slider.y, widthR, slider.height);
-    }
-
 
     start() {
 
@@ -177,8 +155,8 @@
       this.draw();
 
       // if (this.showSliders) {
-      //   this.drawSlider(this.slider);
-      //   this.drawSlider(this.sizeSlider);
+      //   this.slider.draw();
+      //   this.sizeSlider.draw();
       // }
     }
   }
@@ -467,6 +445,7 @@
 
     constructor(canvas, x, y, leftWidth, length) {
       this.canvas = canvas;
+      this.ctx = canvas.getContext('2d');
       this.x = x;
       this.y = y;
       this.leftWidth = leftWidth;
@@ -562,6 +541,28 @@
         }));
 
       });
+    }
+
+    draw() {
+      let widthL = this.leftWidth;
+      let widthR = this.length - widthL;
+      const sliderColor = 'rgba(200,200,200,0.4)';
+      //Left side
+      this.ctx.beginPath();
+      this.ctx.fillStyle = sliderColor;
+      this.ctx.fillRect(this.x, this.y, widthL, this.height);
+
+      //Slider
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.x + widthL, this.y - 2);
+      this.ctx.lineTo(this.x + widthL, this.y + this.height + 2);
+      this.ctx.strokeStyle = 'yellow';
+      this.ctx.stroke();
+
+      //Right Side
+      this.ctx.beginPath();
+      this.ctx.fillStyle = sliderColor;
+      this.ctx.fillRect(slider.x + widthL + 1, slider.y, widthR, slider.height);
     }
 
   }
