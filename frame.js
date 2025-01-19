@@ -572,7 +572,7 @@
       //Right Side
       this.ctx.beginPath();
       this.ctx.fillStyle = sliderColor;
-      this.ctx.fillRect(slider.x + widthL + 1, slider.y, widthR, slider.height);
+      this.ctx.fillRect(this.x + widthL + 1, this.y, widthR, this.height);
     }
 
   }
