@@ -37,7 +37,7 @@
       this.shrinkInc = 0.0001;
 
       this.fillBackground = false;
-      this.showSliders = false;
+      this.showSliders = true;
 
       this.minShrinkRate = 0.8;
       this.shrinkDelta = 0.3;
@@ -48,7 +48,14 @@
       const sliderY = 0;
       const sliderHeight = 20;
 
-      this.slider = new Slider(this.canvas, sliderX, sliderY, sliderStart, sliderLength)
+      this.slider = new Slider(
+        this.canvas,
+        sliderX,
+        sliderY,
+        sliderStart,
+        sliderLength,
+        (ratio) => { this.deltaTheta = Math.PI * 2 * ratio }
+        )
       // this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - (sliderHeight + 10), sliderStart, sliderLength)
 
       // this.sliders = [this.slider, this.sizeSlider]
@@ -154,10 +161,10 @@
       
       this.draw();
 
-      // if (this.showSliders) {
-      //   this.slider.draw();
-      //   this.sizeSlider.draw();
-      // }
+      if (this.showSliders) {
+        this.slider.draw();
+        // this.sizeSlider.draw();
+      }
     }
   }
 
@@ -443,7 +450,7 @@
 
   class Slider {
 
-    constructor(canvas, x, y, leftWidth, length) {
+    constructor(canvas, x, y, leftWidth, length, changeFunction) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
       this.x = x;
@@ -452,6 +459,7 @@
       this.length = length;
       this.held = false;
       this.height = 20;
+      this.changeFunction = changeFunction;
 
       this.initMouseListeners();
     }  
@@ -544,6 +552,8 @@
     }
 
     draw() {
+      this.changeFunction(this.getRatio())
+
       let widthL = this.leftWidth;
       let widthR = this.length - widthL;
       const sliderColor = 'rgba(200,200,200,0.4)';
