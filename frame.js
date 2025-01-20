@@ -41,6 +41,7 @@
 
       this.minShrinkRate = 0.8;
       this.shrinkDelta = 0.3;
+      this.huePeriod = 0;
 
       const sliderStart = 0;
       const sliderLength       = 860;
@@ -54,7 +55,7 @@
         sliderY,
         sliderStart,
         sliderLength,
-        (ratio) => { this.deltaTheta = Math.PI * 2 * ratio }
+        (ratio) => { this.huePeriod = Math.PI * 2 * ratio }
         )
       // this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - (sliderHeight + 10), sliderStart, sliderLength)
 
@@ -90,7 +91,8 @@
         this.theta,              // theta
         () => this.deltaTheta,   // deltaTheta
         () => this.shrinkFactor, // reductionRate
-        () => this.depth )       // depth
+        () => this.depth,        // depth
+        () => this.huePeriod )   // period
 
       this.reset();
     }
@@ -170,7 +172,7 @@
 
   class Frame {
 
-    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, parent=null) {
+    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, getHuePeriod, parent=null) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
@@ -182,6 +184,7 @@
       this.getDeltaTheta = getDeltaTheta;
       this.getReductionRate = getReductionRate;
       this.reductionRate = getReductionRate();
+      this.getHuePeriod = getHuePeriod;
 
       this.periodDepthDivisor = 10;
       this.tAngleMultiplier = 8;
@@ -230,6 +233,7 @@
           getDeltaTheta,
           getReductionRate,
           () => this.depth - 1,
+          getHuePeriod,
           this
           )
       }
@@ -243,6 +247,8 @@
         return 2 * Math.PI / (1 + Math.exp(-z + Math.PI));
       }
       const hue = (period, interval, t) => {
+
+        period += this.getHuePeriod()
 
         let maxF = (t) => maxHue;// + 0.5 * Math.sin(t);
         let minF = (t) => 0.5 * Math.sin(t);
