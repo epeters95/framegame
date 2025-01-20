@@ -128,7 +128,7 @@
       // if (this.sizeSlider.held) {
       //   this.shrinkFactor = 0.93 +  0.3 * this.sizeSlider.getRatio();
       // }
-      if (this.holding) {
+      if (!this.slider.held && this.holding) {
         let diagonal = Math.hypot(this.frameWidth / 2, this.frameWidth / 2);
         let x = centerX - this.mouseXY[0];
         let y = centerY - this.mouseXY[1];
@@ -138,7 +138,7 @@
         this.deltaTheta = this.idleDelta / 2;
       }
 
-      else {
+      if (this.slider.held || !this.holding) {
         this.deltaTheta = this.idleDelta;
 
         if (this.shrinkFactor >= 1 && this.shrinkInc < 0 ||
