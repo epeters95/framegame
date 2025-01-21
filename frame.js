@@ -185,6 +185,7 @@
       this.getReductionRate = getReductionRate;
       this.reductionRate = getReductionRate();
       this.getHuePeriod = getHuePeriod;
+      this.parent = parent;
 
       this.periodDepthDivisor = 10;
       this.tAngleMultiplier = 8;
@@ -440,8 +441,11 @@
         linearGradient1.addColorStop(1, rgbStr2)
 
         this.ctx.strokeStyle = linearGradient1;
-        this.ctx.stroke();
+        this.ctx.lineWidth = 2;
 
+        if (this.parent){
+          this.ctx.stroke();
+        }
         this.subFrame.draw()
 
         this.depth = this.getDepth();
@@ -572,7 +576,8 @@
       this.ctx.beginPath();
       this.ctx.moveTo(this.x + widthL, this.y - 2);
       this.ctx.lineTo(this.x + widthL, this.y + this.height + 2);
-      this.ctx.strokeStyle = 'yellow';
+      this.ctx.lineWidth = 5;
+      this.ctx.strokeStyle = 'blue';
       this.ctx.stroke();
 
       //Right Side
