@@ -249,7 +249,7 @@
       }
       const hue = (period, interval, t) => {
 
-        period += this.getHuePeriod()
+        // period += this.getHuePeriod()
 
         let maxF = (t) => maxHue;// + 0.5 * Math.sin(t);
         let minF = (t) => 0.5 * Math.sin(t);
@@ -279,7 +279,7 @@
       };
 
 
-      let maxDepth = Math.PI * 2;
+      let maxDepth = Math.PI * (1 + this.getHuePeriod());
       let interval = maxDepth / numIntervals;
 
       let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
@@ -566,7 +566,7 @@
 
       let widthL = this.leftWidth;
       let widthR = this.length - widthL;
-      const sliderColor = 'rgba(200,200,200,0.4)';
+      const sliderColor = 'rgba(0,0,0,0.3)';
       //Left side
       this.ctx.beginPath();
       this.ctx.fillStyle = sliderColor;
