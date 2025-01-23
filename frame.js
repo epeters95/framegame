@@ -43,6 +43,8 @@
       this.shrinkDelta = 0.3;
       this.huePeriod = 0;
 
+      this.dPointPosition = 0;
+
       const sliderStart = 0;
       const sliderLength       = 860;
       const sliderX = centerX - Math.floor(sliderLength / 2);
@@ -55,7 +57,8 @@
         sliderY,
         sliderStart,
         sliderLength,
-        (ratio) => { this.huePeriod = Math.PI * 2 * ratio }
+        // (ratio) => { this.huePeriod = Math.PI * 2 * ratio }
+        (ratio) => { this.dPointPosition = ratio }
         )
       // this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - (sliderHeight + 10), sliderStart, sliderLength)
 
@@ -92,7 +95,7 @@
         () => this.deltaTheta,   // deltaTheta
         () => this.shrinkFactor, // reductionRate
         () => this.depth,        // depth
-        () => this.huePeriod )   // period
+        () => this.dPointPosition )   // period
 
       this.reset();
     }
@@ -172,7 +175,7 @@
 
   class Frame {
 
-    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, getHuePeriod, parent=null) {
+    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, getSliderVal, parent=null) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
@@ -184,7 +187,7 @@
       this.getDeltaTheta = getDeltaTheta;
       this.getReductionRate = getReductionRate;
       this.reductionRate = getReductionRate();
-      this.getHuePeriod = getHuePeriod;
+      this.getSliderVal = getSliderVal;
       this.parent = parent;
 
       this.periodDepthDivisor = 10;
@@ -234,7 +237,7 @@
           getDeltaTheta,
           getReductionRate,
           () => this.depth - 1,
-          getHuePeriod,
+          getSliderVal,
           this
           )
       }
@@ -279,7 +282,8 @@
       };
 
 
-      let maxDepth = Math.PI * (1 + this.getHuePeriod());
+      // let maxDepth = Math.PI * (1 + this.getHuePeriod());
+      let maxDepth = Math.PI * 2;
       let interval = maxDepth / numIntervals;
 
       let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
@@ -377,9 +381,15 @@
 
         let pointD = this.translateXY([ -1 * newWidthR, -1 * newHeightR])
 
-        // let pointCD = this.translateXY([0, -(newHeightL + newHeightR) / 2])
 
-        let pointCD = [pointD[1] - pointC[1], pointD[0] - pointC[0]]
+        let pointD_alt = [pointD[1] - pointC[1], pointD[0] - pointC[0]]
+
+        let pointD_alt_between = [
+          this.getSliderVal() * (pointD[0] - pointD_alt[0])
+          this.getSliderVal() * (pointD[1] - pointD_alt[1]) ];
+        
+        // let pointD_alt2 = this.translateXY([0, -(newHeightL + newHeightR) / 2])
+
 
         // Trace 4 paths
         this.ctx.beginPath();
@@ -391,7 +401,7 @@
         this.ctx.lineTo(this.center[0] - pointC[0],this.center[1] -  pointC[1]);
 
         // this.ctx.lineTo(this.center[0] - pointD[0],this.center[1] -  pointD[1]);
-        this.ctx.lineTo(this.center[0] - pointCD[0],this.center[1] -  pointCD[1]);
+        this.ctx.lineTo(this.center[0] - pointD_alt_between[0],this.center[1] -  pointD_alt_between[1]);
 
         this.ctx.lineTo(this.center[0] - pointA[0],this.center[1] -  pointA[1]);
 
