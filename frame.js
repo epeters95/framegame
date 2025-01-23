@@ -64,6 +64,21 @@
 
       // this.sliders = [this.slider, this.sizeSlider]
 
+
+      // Config options
+
+      this.configOptions = {};
+
+      let optionInputs = Array.from(document.getElementsByClassName("configOption"));
+      this.optionNames = optionInputs.map((opt) => opt.id);
+
+      optionInputs.forEach((optInput) => {
+        
+        optInput.addEventListener("click", () => {
+          this.configOptions[optInput.id] = optInput.checked;
+        });
+      });
+
       this.canvas.addEventListener('mousedown', () => {
         this.holding = true;
       })
@@ -387,7 +402,7 @@
         let pointD_alt_between = [
           this.getSliderVal() * (pointD[0] - pointD_alt[0])
           this.getSliderVal() * (pointD[1] - pointD_alt[1]) ];
-        
+
         // let pointD_alt2 = this.translateXY([0, -(newHeightL + newHeightR) / 2])
 
 
