@@ -44,6 +44,8 @@
 
       this.dPointPosition = 0;
 
+      this.useHueConfig = false;
+
       const sliderStart = 0;
       const sliderLength       = 860;
       const sliderX = centerX - Math.floor(sliderLength / 2);
@@ -56,9 +58,21 @@
         sliderY,
         sliderStart,
         sliderLength,
-        // (ratio) => { this.huePeriod = Math.PI * 2 * ratio }
-        (ratio) => { this.dPointPosition = ratio }
-        )
+        
+        (ratio) => { 
+          
+          if (this.configOptions["huePeriod"]) {
+            this.huePeriod = Math.PI * 2 * ratio
+          } else {
+            this.huePeriod = Math.PI * 2
+          }
+
+          if (this.configOptions["pointD"]) {
+            this.dPointPosition = ratio
+          } else {
+            this.dPointPosition = 1;
+          }
+        })
       // this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - (sliderHeight + 10), sliderStart, sliderLength)
 
       // this.sliders = [this.slider, this.sizeSlider]
