@@ -6,7 +6,7 @@
 
   class Frame {
 
-    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, getSliderVal, parent=null) {
+    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, getHuePeriod, getPointDPosition, parent=null) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
@@ -18,7 +18,8 @@
       this.getDeltaTheta = getDeltaTheta;
       this.getReductionRate = getReductionRate;
       this.reductionRate = getReductionRate();
-      this.getSliderVal = getSliderVal;
+      this.getHuePeriod = getHuePeriod;
+      this.getPointDPosition = getPointDPosition;
       this.parent = parent;
 
       this.periodDepthDivisor = 10;
@@ -68,7 +69,8 @@
           getDeltaTheta,
           getReductionRate,
           () => this.depth - 1,
-          getSliderVal,
+          getHuePeriod,
+          getPointDPosition,
           this
           )
       }
@@ -113,8 +115,7 @@
       };
 
 
-      // let maxDepth = Math.PI * (1 + this.getHuePeriod());
-      let maxDepth = Math.PI * 2;
+      let maxDepth = Math.PI * (1 + this.getHuePeriod());
       let interval = maxDepth / numIntervals;
 
       let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
@@ -216,8 +217,8 @@
         let pointD_alt = [pointD[1] - pointC[1], pointD[0] - pointC[0]]
 
         let pointD_alt_between = [
-          this.getSliderVal() * (pointD[0] - pointD_alt[0]),
-          this.getSliderVal() * (pointD[1] - pointD_alt[1]) ];
+          this.getPointDPosition() * (pointD[0] - pointD_alt[0]),
+          this.getPointDPosition() * (pointD[1] - pointD_alt[1]) ];
 
         // let pointD_alt2 = this.translateXY([0, -(newHeightL + newHeightR) / 2])
 

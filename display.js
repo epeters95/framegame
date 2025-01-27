@@ -58,7 +58,7 @@
         sliderY,
         sliderStart,
         sliderLength,
-        
+
         (ratio) => { 
           
           if (this.configOptions["huePeriod"]) {
@@ -123,7 +123,8 @@
         () => this.deltaTheta,   // deltaTheta
         () => this.shrinkFactor, // reductionRate
         () => this.depth,        // depth
-        () => this.dPointPosition )   // period
+        () => this.huePeriod,    // period
+        () => this.dPointPosition )   // Point D position
 
       this.reset();
     }
