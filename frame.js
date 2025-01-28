@@ -85,7 +85,7 @@
       }
       const hue = (period, interval, t) => {
 
-        // period += this.getHuePeriod()
+        period += this.getHuePeriod()
 
         let maxF = (t) => maxHue;// + 0.5 * Math.sin(t);
         let minF = (t) => 0.5 * Math.sin(t);
@@ -115,7 +115,7 @@
       };
 
 
-      let maxDepth = Math.PI * (1 + this.getHuePeriod());
+      let maxDepth = Math.PI * 2;
       let interval = maxDepth / numIntervals;
 
       let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
@@ -217,8 +217,8 @@
         let pointD_alt = [pointD[1] - pointC[1], pointD[0] - pointC[0]]
 
         let pointD_alt_between = [
-          this.getPointDPosition() * (pointD[0] - pointD_alt[0]),
-          this.getPointDPosition() * (pointD[1] - pointD_alt[1]) ];
+          pointD[0] - this.getPointDPosition() * pointD_alt[0],
+          pointD[1] - this.getPointDPosition() * pointD_alt[1] ];
 
         // let pointD_alt2 = this.translateXY([0, -(newHeightL + newHeightR) / 2])
 

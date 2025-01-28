@@ -42,9 +42,24 @@
       this.shrinkDelta = 0.3;
       this.huePeriod = 0;
 
-      this.dPointPosition = 0;
+      this.dPointPosition = 1;
 
       this.useHueConfig = false;
+
+      // Config options
+
+      this.configOptions = { "huePeriod": true };
+
+      let optionInputs = Array.from(document.getElementsByClassName("configOption"));
+      this.optionNames = optionInputs.map((opt) => opt.id);
+
+      optionInputs.forEach((optInput) => {
+        
+        optInput.addEventListener("click", () => {
+          this.optionNames.forEach((optName) => { this.configOptions[optName] = false})
+          this.configOptions[optInput.id] = optInput.checked;
+        });
+      });
 
       const sliderStart = 0;
       const sliderLength       = 860;
@@ -61,13 +76,13 @@
 
         (ratio) => { 
           
-          if (this.configOptions["huePeriod"]) {
+          if (this.configOptions["huePeriod"] === true) {
             this.huePeriod = Math.PI * 2 * ratio
           } else {
             this.huePeriod = Math.PI * 2
           }
 
-          if (this.configOptions["pointD"]) {
+          if (this.configOptions["pointD"] === true) {
             this.dPointPosition = ratio
           } else {
             this.dPointPosition = 1;
@@ -78,19 +93,6 @@
       // this.sliders = [this.slider, this.sizeSlider]
 
 
-      // Config options
-
-      this.configOptions = {};
-
-      let optionInputs = Array.from(document.getElementsByClassName("configOption"));
-      this.optionNames = optionInputs.map((opt) => opt.id);
-
-      optionInputs.forEach((optInput) => {
-        
-        optInput.addEventListener("click", () => {
-          this.configOptions[optInput.id] = optInput.checked;
-        });
-      });
 
       this.canvas.addEventListener('mousedown', () => {
         this.holding = true;
