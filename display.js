@@ -83,14 +83,10 @@
           
           if (this.configOptions["huePeriod"] === true) {
             this.huePeriod = Math.PI * 2 * ratio
-          } else {
-            this.huePeriod = Math.PI * 2
           }
 
           if (this.configOptions["pointD"] === true) {
             this.dPointPosition = ratio
-          } else {
-            this.dPointPosition = 1;
           }
         })
       // this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - (sliderHeight + 10), sliderStart, sliderLength)
