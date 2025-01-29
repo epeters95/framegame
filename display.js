@@ -35,7 +35,7 @@
       this.idleInc = 0.0005;
       this.shrinkInc = 0.0001;
 
-      this.fillBackground = false;
+      this.clearBackground = false;
       this.showSliders = true;
 
       this.minShrinkRate = 0.8;
@@ -60,6 +60,11 @@
           this.configOptions[optInput.id] = optInput.checked;
         });
       });
+
+      const clearConfig = document.getElementById("clearBackground");
+      clearConfig.addEventListener("click", () => {
+        this.clearBackground = clearConfig.checked;
+      })
 
       const sliderStart = 0;
       const sliderLength       = 860;
@@ -144,7 +149,7 @@
       this.idleDelta += this.idleInc;
 
       // Fill background
-      if (this.fillBackground) {
+      if (this.clearBackground) {
         this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         this.ctx.fillStyle = this.bgColor;
         this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
