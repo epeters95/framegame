@@ -252,7 +252,7 @@
 
         let x = this.getPlace();
         if (!this.held
-            && between(mouse.x, this.x, this.y + this.length)
+            && between(mouse.x, Math.min(this.x, this.getPlace()), Math.max(this.x + this.length, this.getPlace()))
             && between(mouse.y, this.y, this.y + this.height)
         ) {
           this.hold();
