@@ -45,6 +45,7 @@
       this.dPointPosition = 1;
 
       this.useHueConfig = false;
+      this.useInvert = false;
 
       // Config options
 
@@ -64,6 +65,11 @@
       const clearConfig = document.getElementById("clearBackground");
       clearConfig.addEventListener("click", () => {
         this.clearBackground = clearConfig.checked;
+      })
+
+      const invertConfig = document.getElementById("invert");
+      invertConfig.addEventListener("click", () => {
+        this.useInvert = invertConfig.checked;
       })
 
       const sliderStart = 0;
@@ -127,7 +133,8 @@
         () => this.shrinkFactor, // reductionRate
         () => this.depth,        // depth
         () => this.huePeriod,    // period
-        () => this.dPointPosition )   // Point D position
+        () => this.dPointPosition, // Point D position
+        () => this.useInvert )
 
       this.reset();
     }

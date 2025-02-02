@@ -6,7 +6,7 @@
 
   class Frame {
 
-    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, getHuePeriod, getPointDPosition, parent=null) {
+    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, getHuePeriod, getPointDPosition, useInvert, parent=null) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
@@ -20,6 +20,7 @@
       this.reductionRate = getReductionRate();
       this.getHuePeriod = getHuePeriod;
       this.getPointDPosition = getPointDPosition;
+      this.useInvert = useInvert;
       this.parent = parent;
 
       this.periodDepthDivisor = 10;
@@ -71,6 +72,7 @@
           () => this.depth - 1,
           getHuePeriod,
           getPointDPosition,
+          useInvert,
           this
           )
       }
@@ -158,11 +160,16 @@
 
       let inverseVal = sv[1]
 
+      if (this.useInvert()) {
+        inverseVal = 1 - inverseVal;
+      }
+
       // Opposite frames invert colors
 
       // if (depth % 2 === 0) {
         // inverseVal = 1 - sv[1]
       // }
+
       let newCols = hsv2rgb(hsv[0], 1 - sv[0], inverseVal)
 
       colors = colors.flatMap((c, i) => maxHue - newCols[i])
