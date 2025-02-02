@@ -6,7 +6,7 @@
 
   class Frame {
 
-    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, getHuePeriod, getPointDPosition, useInvert, parent=null) {
+    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, getHuePeriod, getPointDPosition, useInvert, useSigmoid, parent=null) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
@@ -21,6 +21,7 @@
       this.getHuePeriod = getHuePeriod;
       this.getPointDPosition = getPointDPosition;
       this.useInvert = useInvert;
+      this.useSigmoid = useSigmoid;
       this.parent = parent;
 
       this.periodDepthDivisor = 10;
@@ -73,6 +74,7 @@
           getHuePeriod,
           getPointDPosition,
           useInvert,
+          useSigmoid,
           this
           )
       }
@@ -94,8 +96,13 @@
         let incF = (t) => (maxHue / interval) * ((t + period) % interval);
         let decF = (t) => (maxHue / interval) * (interval - ((t + period) % interval));
 
-        let isigF = (t) => incF(t);//incF(sigmoid(t))
-        let dsigF = (t) => decF(t);//decF(sigmoid(t))
+        let isigF = (t) => incF(t);
+        let dsigF = (t) => decF(t);
+
+        if (this.useSigmoid()) {
+          isigF = (t) => incF(sigmoid(t))
+          dsigF = (t) => decF(sigmoid(t))
+        }
 
         let fArray = [
           [ maxF, isigF, minF ],

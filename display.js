@@ -46,6 +46,7 @@
 
       this.useHueConfig = false;
       this.useInvert = false;
+      this.useSigmoid = false;
 
       // Config options
 
@@ -70,6 +71,11 @@
       const invertConfig = document.getElementById("invert");
       invertConfig.addEventListener("click", () => {
         this.useInvert = invertConfig.checked;
+      })
+
+      const sigmoidConfig = document.getElementById("sigmoid");
+      sigmoidConfig.addEventListener("click", () => {
+        this.useSigmoid = sigmoidConfig.checked;
       })
 
       const sliderStart = 0;
@@ -124,17 +130,18 @@
 
       this.frame = new Frame(
         this.canvas,
-        [centerX, centerY],      // center
-        canvasWidth,             // width
-        canvasHeight,            // height
-        radius,                  // radius
-        this.theta,              // theta
-        () => this.deltaTheta,   // deltaTheta
-        () => this.shrinkFactor, // reductionRate
-        () => this.depth,        // depth
-        () => this.huePeriod,    // period
+        [centerX, centerY],        // center
+        canvasWidth,               // width
+        canvasHeight,              // height
+        radius,                    // radius
+        this.theta,                // theta
+        () => this.deltaTheta,     // deltaTheta
+        () => this.shrinkFactor,   // reductionRate
+        () => this.depth,          // depth
+        () => this.huePeriod,      // period
         () => this.dPointPosition, // Point D position
-        () => this.useInvert )
+        () => this.useInvert,      // use invert value
+        () => this.useSigmoid )    // use sigmoid hue
 
       this.reset();
     }
