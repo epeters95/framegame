@@ -19,34 +19,30 @@
       this.frameHeight = canvasHeight;
       this.frameRate = 30;
 
-      this.theta = Math.tanh(this.frameWidth / this.frameHeight);
-
-      this.shrinkFactor = 0.995;
-      this.deltaTheta = 0;
-      this.depth = 30;
-
       this.bgColor = "black";
       this.fgColor = "white";
 
-      this.holding = false;
       this.mouseXY = [0, 0];
 
-      this.idleDelta = 0;
-      this.idleInc = 0.0005;
-      this.shrinkInc = 0.0001;
-
-      this.clearBackground = false;
-      this.showSliders = true;
-
-      this.minShrinkRate = 0.8;
-      this.shrinkDelta = 0.3;
-      this.huePeriod = 0;
+      this.theta = Math.tanh(this.frameWidth / this.frameHeight);
+      this.shrinkFactor   = 0.995;
+      this.deltaTheta     = 0;
+      this.depth          = 30;
+      this.idleDelta      = 0;
+      this.idleInc        = 0.0005;
+      this.shrinkInc      = 0.0001;
+      this.minShrinkRate  = 0.8;
+      this.shrinkDelta    = 0.3;
+      this.huePeriod      = 0;
 
       this.dPointPosition = 1;
 
-      this.useHueConfig = false;
-      this.useInvert = false;
-      this.useSigmoid = false;
+      this.holding         = false;
+      this.clearBackground = false;
+      this.showSliders     = true;
+      this.useHueConfig    = false;
+      this.useInvert       = false;
+      this.useSigmoid      = false;
 
       // Config options
 
@@ -79,10 +75,9 @@
       })
 
       const sliderStart = 0;
-      const sliderLength       = 860;
+      const sliderLength = 860;
       const sliderX = centerX - Math.floor(sliderLength / 2);
       const sliderY = 0;
-      const sliderHeight = 20;
 
       this.slider = new Slider(
         this.canvas,
@@ -101,9 +96,6 @@
             this.dPointPosition = ratio
           }
         })
-      // this.sizeSlider = new Slider(sliderX, sliderY + canvasHeight - (sliderHeight + 10), sliderStart, sliderLength)
-
-      // this.sliders = [this.slider, this.sizeSlider]
 
 
 
@@ -165,18 +157,6 @@
         this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
       }
 
-      // if (this.slider.held) {
-      //   this.deltaTheta = Math.PI * 2 * this.slider.getRatio();
-      // }
-      // else if (this.holding) {
-        // this.deltaTheta = -Math.tanh(
-        //   (centerY - this.mouseXY[1]) / (centerX - this.mouseXY[0])
-        // );
-      // }
-
-      // if (this.sizeSlider.held) {
-      //   this.shrinkFactor = 0.93 +  0.3 * this.sizeSlider.getRatio();
-      // }
       if (!this.slider.held && this.holding) {
         let diagonal = Math.hypot(this.frameWidth / 2, this.frameWidth / 2);
         let x = centerX - this.mouseXY[0];
@@ -214,7 +194,6 @@
 
       if (this.showSliders) {
         this.slider.draw();
-        // this.sizeSlider.draw();
       }
     }
   }
