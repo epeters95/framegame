@@ -132,6 +132,6 @@
 
   }
 
-  var FrameTest.Slider = Slider;
+  FrameTest.Slider = Slider;
 
-})(this)l
+})(this);

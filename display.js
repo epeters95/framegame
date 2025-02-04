@@ -44,6 +44,7 @@
       this.useHueConfig    = false;
       this.useInvert       = false;
       this.useSigmoid      = false;
+      this.modifyHsv       = false;
 
       // Config options
 
@@ -73,6 +74,11 @@
       const sigmoidConfig = document.getElementById("sigmoid");
       sigmoidConfig.addEventListener("click", () => {
         this.useSigmoid = sigmoidConfig.checked;
+      })
+
+      const modifyHsvConfig = document.getElementById("modifyHsv");
+      modifyHsvConfig.addEventListener("click", () => {
+        this.modifyHsv = modifyHsvConfig.checked;
       })
 
       const sliderStart = 0;
@@ -134,7 +140,8 @@
         () => this.huePeriod,      // period
         () => this.dPointPosition, // Point D position
         () => this.useInvert,      // use invert value
-        () => this.useSigmoid )    // use sigmoid hue
+        () => this.useSigmoid,     // use sigmoid hue
+        () => this.modifyHsv )     // modify hsv function
 
       this.reset();
     }

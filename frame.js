@@ -6,7 +6,22 @@
 
   class Frame {
 
-    constructor(canvas, center, width, height, radius, theta, getDeltaTheta, getReductionRate, getDepth, getHuePeriod, getPointDPosition, useInvert, useSigmoid, parent=null) {
+    constructor(canvas,
+      center,
+      width,
+      height,
+      radius,
+      theta,
+      getDeltaTheta,
+      getReductionRate,
+      getDepth,
+      getHuePeriod,
+      getPointDPosition,
+      useInvert,
+      useSigmoid,
+      modifyHsv,
+      parent=null) {
+
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
@@ -22,6 +37,7 @@
       this.getPointDPosition = getPointDPosition;
       this.useInvert = useInvert;
       this.useSigmoid = useSigmoid;
+      this.modifyHsv = modifyHsv;
       this.parent = parent;
 
       this.periodDepthDivisor = 10;
@@ -75,6 +91,7 @@
           getPointDPosition,
           useInvert,
           useSigmoid,
+          modifyHsv,
           this
           )
       }
@@ -141,8 +158,12 @@
       const rgb2hsv = (r,g,b) => {
         let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
         let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/complAngle));
-        return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
-        // return [60 * (h < 0 ? h + 6 : h), v && c/(30 * complAngle), v];
+        
+        if (this.modifyHsv()) {
+          return [60 * (h < 0 ? h + 6 : h), v && c/(30 * complAngle), v];
+        } else {
+          return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
+        }
       }
 
       const hsv2rgb = (h,s,v) => {
