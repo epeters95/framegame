@@ -7,17 +7,15 @@
   const canvasHeight = 1080;
   const canvasWidth = 1920;
 
-  const centerX = Math.floor(canvasWidth / 2);
-  const centerY = Math.floor(canvasHeight / 2);
-
-
   class Display {
     constructor(canvas) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
-      this.frameWidth = canvasHeight;
+      this.frameWidth = canvasWidth;
       this.frameHeight = canvasHeight;
+      this.centerX = Math.floor(canvasWidth / 2);
+      this.centerY = Math.floor(canvasHeight / 2);
       this.frameRate = 30;
 
       this.bgColor = "black";
@@ -83,7 +81,7 @@
 
       const sliderStart = 0;
       const sliderLength = 860;
-      const sliderX = centerX - Math.floor(sliderLength / 2);
+      const sliderX = this.centerX - Math.floor(sliderLength / 2);
       const sliderY = 0;
 
       this.slider = new Slider(
@@ -129,9 +127,9 @@
 
       this.frame = new Frame(
         this.canvas,
-        [centerX, centerY],        // center
-        canvasWidth,               // width
-        canvasHeight,              // height
+        [this.centerX, this.centerY],        // center
+        this.frameWidth,           // width
+        this.frameHeight,          // height
         radius,                    // radius
         this.theta,                // theta
         () => this.deltaTheta,     // deltaTheta
@@ -160,15 +158,15 @@
 
       // Fill background
       if (this.clearBackground) {
-        this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        this.ctx.clearRect(0, 0, this.frameWidth, this.frameHeight);
         this.ctx.fillStyle = this.bgColor;
-        this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        this.ctx.fillRect(0, 0, this.frameWidth, this.frameHeight);
       }
 
       if (!this.slider.held && this.holding) {
         let diagonal = Math.hypot(this.frameWidth / 2, this.frameWidth / 2);
-        let x = centerX - this.mouseXY[0];
-        let y = centerY - this.mouseXY[1];
+        let x = this.centerX - this.mouseXY[0];
+        let y = this.centerY - this.mouseXY[1];
         let distRatio = Math.hypot(x, y) / diagonal;
 
         this.shrinkFactor = this.minShrinkRate + this.shrinkDelta * distRatio;
@@ -201,6 +199,11 @@
       this.draw();
 
       if (this.showSliders) {
+        // Clear slider area
+        this.ctx.clearRect(0, 0, this.frameWidth, this.slider.height);
+        this.ctx.fillStyle = this.bgColor;
+        this.ctx.fillRect(0, 0, this.frameWidth, this.slider.height);
+        
         this.slider.draw();
       }
     }

@@ -48,10 +48,12 @@
 
         const between = (a, b, c) => { return (a >= b && a <= c) };
 
+        let padding = 4;
+
         let x = this.getPlace();
         if (!this.held
-            && between(mouse.x, Math.min(this.x, this.getPlace()), Math.max(this.x + this.length, this.getPlace()))
-            && between(mouse.y, this.y, this.y + this.height)
+            && between(mouse.x, Math.min(this.x, this.getPlace()) - padding, Math.max(this.x + this.length, this.getPlace()) + padding)
+            && between(mouse.y, this.y + padding, this.y + this.height + padding)
         ) {
           this.hold();
           this.setPlace(mouse.x)
@@ -118,8 +120,8 @@
 
       //Slider
       this.ctx.beginPath();
-      this.ctx.moveTo(this.x + widthL, this.y - 2);
-      this.ctx.lineTo(this.x + widthL, this.y + this.height + 2);
+      this.ctx.moveTo(this.x + widthL, this.y);
+      this.ctx.lineTo(this.x + widthL, this.y + this.height);
       this.ctx.lineWidth = 5;
       this.ctx.strokeStyle = 'blue';
       this.ctx.stroke();
