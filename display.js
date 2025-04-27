@@ -43,6 +43,7 @@
       this.useInvert       = false;
       this.useSigmoid      = false;
       this.modifyHsv       = false;
+      this.addHue          = null;
 
       // Config options
 
@@ -78,6 +79,21 @@
       modifyHsvConfig.addEventListener("click", () => {
         this.modifyHsv = modifyHsvConfig.checked;
       })
+
+      const cyanConfig = document.getElementById("cyan");
+      cyanConfig.addEventListener("click", () => {
+        this.addHue = "cyan";
+      });
+
+      const magentaConfig = document.getElementById("magenta");
+      magentaConfig.addEventListener("click", () => {
+        this.addHue = "magenta";
+      });
+
+      const yellowConfig = document.getElementById("yellow");
+      yellowConfig.addEventListener("click", () => {
+        this.addHue = "yellow";
+      });
 
       const sliderStart = 0;
       const sliderLength = 860;
@@ -160,6 +176,9 @@
       if (this.clearBackground) {
         this.ctx.clearRect(0, 0, this.frameWidth, this.frameHeight);
         this.ctx.fillStyle = this.bgColor;
+        if (this.addHue !== null) {
+          this.ctx.fillStyle = this.addHue;
+        }
         this.ctx.fillRect(0, 0, this.frameWidth, this.frameHeight);
       }
 
