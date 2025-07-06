@@ -63,6 +63,7 @@
       const clearConfig = document.getElementById("clearBackground");
       clearConfig.addEventListener("click", () => {
         this.clearBackground = clearConfig.checked;
+        this.addHue = null;
       })
 
       const invertConfig = document.getElementById("invert");
@@ -178,6 +179,8 @@
         this.ctx.fillStyle = this.bgColor;
         if (this.addHue !== null) {
           this.ctx.fillStyle = this.addHue;
+        } else {
+          this.ctx.fillStyle = "#000000";
         }
         this.ctx.fillRect(0, 0, this.frameWidth, this.frameHeight);
       }
