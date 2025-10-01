@@ -4,12 +4,12 @@
     <script defer src="./slider.js"></script>
     <script defer src="./display.js"></script>
   </head>
-  <body style="background-color: black; width: 100%; margin: 0px;" >
-    <div class="frame-container" style="width: 100%;">
+  <body>
+    <div class="frame-container">
       <canvas width="1920" height="1080" ></canvas>
     </div>
     <br>
-    <div class="configOptions" style="color: white; display: inline-block; width:20%">
+    <div class="config-options">
       <span><b>Configure Slider</b></span><br/>
       <input type="radio" class="configOption" name="configSlider" id="huePeriod" value="true" checked="checked">
       <label for="huePeriod">Modify Hue Period</label>
@@ -18,7 +18,7 @@
       <label for="pointD">Modify Point D Position</label>
       <br>
     </div>
-    <div style="color: white; display: inline-block; width:20%">
+    <div class="settings-panel">
       <span><b>Draw Settings</b></span><br/>
       <input type="checkbox" id="clearBackground">
       <label for="clearBackground">Clear background</label>
@@ -33,7 +33,7 @@
       <label for="modifyHsv">Modified HSV function</label>
       <br>
     </div>
-    <div style="color: white; display: inline-block; width:20%">
+    <div class="settings-panel">
       <span><b>Colorize</b></span><br/>
       <input type="radio" name="config-colors" id="cyan">
       <label for="cyan">Cyan</label>

@@ -1,0 +1,21 @@
+body {
+  margin: 0px;
+  background-color:black;
+  width: 100%;
+}
+
+.frame-container {
+  width: 100%;
+}
+
+.config-options {
+  color: white;
+  display: inline-block;
+  width:20%;
+}
+
+.settings-panel {
+  color: white;
+  display: inline-block;
+  width:20%;
+}
