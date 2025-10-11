@@ -6,11 +6,29 @@
 
   const canvasHeight = 1080;
   const canvasWidth = 1920;
+  const maxWidth = 2400;
+  let windowPercentage = 0.9;
+
 
   class Display {
     constructor(canvas) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
+      this.cWidth = canvasWidth;
+      this.cHeight = canvasHeight;
+
+
+      window.addEventListener('load', () => {
+        this.canvas.width = this.cWidth;
+        this.canvas.height = this.cHeight;
+        this.resize();
+      })
+
+      window.addEventListener('resize', () => {
+        this.resize();
+      })
+
+      
 
       this.frameWidth = canvasWidth;
       this.frameHeight = canvasHeight;
@@ -159,6 +177,32 @@
         () => this.modifyHsv )     // modify hsv function
 
       this.reset();
+    }
+
+    resize() {
+
+      this.cWidth = window.innerWidth;
+      this.cHeight = window.innerHeight;
+
+      const nativeRatio = canvasWidth / canvasHeight;
+      const browserWindowRatio = this.cWidth / this.cHeight;
+
+      if (browserWindowRatio > nativeRatio) {
+
+        this.cHeight = Math.floor(this.cHeight * windowPercentage);
+        this.cWidth = Math.floor(this.cHeight * nativeRatio);
+      
+      } else {
+
+        this.cHeight = Math.floor(this.cWidth / nativeRatio);
+        this.cWidth = Math.floor(this.cWidth * windowPercentage);
+        
+        if (this.cWidth > maxWidth) {
+          this.cWidth = maxWidth;
+        }
+      }
+      this.canvas.style.width = '' + this.cWidth + 'px';
+      this.canvas.style.height = '' + this.cHeight + 'px';
     }
 
     reset() {
