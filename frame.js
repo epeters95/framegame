@@ -116,10 +116,10 @@
         let isigF = (t) => incF(t);
         let dsigF = (t) => decF(t);
 
-        if (this.useSigmoid()) {
-          isigF = (t) => incF(sigmoid(t))
-          dsigF = (t) => decF(sigmoid(t))
-        }
+        // if (this.useSigmoid()) {
+        //   isigF = (t) => incF(sigmoid(t))
+        //   dsigF = (t) => decF(sigmoid(t))
+        // }
 
         let fArray = [
           [ maxF, isigF, minF ],
@@ -187,6 +187,7 @@
       let sv = this.translateRef([hsv[1], hsv[2]])
 
       let inverseVal = sv[1]
+      let satVal = 1 - sv[0]
 
       if (this.useInvert()) {
         inverseVal = 1 - inverseVal;
@@ -194,11 +195,17 @@
 
       // Opposite frames invert colors
 
-      // if (depth % 2 === 0) {
-        // inverseVal = 1 - sv[1]
-      // }
+      if (this.useSigmoid()) {
+        
+        if (depth % 2 === 0) {
+          satVal = (this.cos(Math.PI * hsv[0] / 20) + satVal) / 2
+        } else {
+          satVal = (this.cos(Math.PI * sv[1] / 20) + satVal) / 2
+        }
 
-      let newCols = hsv2rgb(hsv[0], 1 - sv[0], inverseVal)
+      }
+
+      let newCols = hsv2rgb(hsv[0], satVal, inverseVal)
 
       colors = colors.flatMap((c, i) => maxHue - newCols[i])
 
