@@ -7,7 +7,7 @@
   const canvasHeight = 1080;
   const canvasWidth = 1920;
   const maxWidth = 2400;
-  let windowPercentage = 0.9;
+  let windowPercentage = 0.98;
 
 
   class Display {
