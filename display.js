@@ -59,7 +59,7 @@
       this.showSliders     = true;
       this.useHueConfig    = false;
       this.useInvert       = false;
-      this.useSigmoid      = false;
+      this.useStrange      = false;
       this.modifyHsv       = false;
       this.addHue          = null;
 
@@ -89,9 +89,9 @@
         this.useInvert = invertConfig.checked;
       })
 
-      const sigmoidConfig = document.getElementById("sigmoid");
-      sigmoidConfig.addEventListener("click", () => {
-        this.useSigmoid = sigmoidConfig.checked;
+      const strangeConfig = document.getElementById("strange");
+      strangeConfig.addEventListener("click", () => {
+        this.useStrange = strangeConfig.checked;
       })
 
       const modifyHsvConfig = document.getElementById("modifyHsv");
@@ -173,7 +173,7 @@
         () => this.huePeriod,      // period
         () => this.dPointPosition, // Point D position
         () => this.useInvert,      // use invert value
-        () => this.useSigmoid,     // use sigmoid hue
+        () => this.useStrange,     // use hue alternation
         () => this.modifyHsv )     // modify hsv function
 
       this.reset();

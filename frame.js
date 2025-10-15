@@ -18,7 +18,7 @@
       getHuePeriod,
       getPointDPosition,
       useInvert,
-      useSigmoid,
+      useStrange,
       modifyHsv,
       parent=null) {
 
@@ -36,7 +36,7 @@
       this.getHuePeriod = getHuePeriod;
       this.getPointDPosition = getPointDPosition;
       this.useInvert = useInvert;
-      this.useSigmoid = useSigmoid;
+      this.useStrange = useStrange;
       this.modifyHsv = modifyHsv;
       this.parent = parent;
 
@@ -90,7 +90,7 @@
           getHuePeriod,
           getPointDPosition,
           useInvert,
-          useSigmoid,
+          useStrange,
           modifyHsv,
           this
           )
@@ -195,7 +195,7 @@
 
       // Opposite frames invert colors
 
-      if (this.useSigmoid()) {
+      if (this.useStrange()) {
         
         if (depth % 2 === 0) {
           satVal = (this.cos(Math.PI * hsv[0] / 20) + satVal) / 2
