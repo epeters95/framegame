@@ -16,7 +16,11 @@
       this.changeFunction = changeFunction;
 
       this.initMouseListeners();
-    }  
+    }
+
+    getHeld() {
+      return this.held;
+    }
 
     getPlace() {
       return this.x + this.leftWidth;

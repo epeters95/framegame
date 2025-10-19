@@ -140,7 +140,10 @@
 
 
       this.canvas.addEventListener('mousedown', () => {
-        this.holding = true;
+        
+        if (!this.slider.getHeld()) {
+          this.holding = true;
+        }
       })
 
       this.canvas.addEventListener('mousemove', (e) => {
