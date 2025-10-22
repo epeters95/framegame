@@ -23,6 +23,7 @@
       useStrange,
       modifyHsv,
       colorSwap,
+      shadowMode,
       parent=null) {
 
       this.canvas = canvas;
@@ -42,6 +43,7 @@
       this.useStrange = useStrange;
       this.modifyHsv = modifyHsv;
       this.colorSwap = colorSwap;
+      this.shadowMode = shadowMode;
       this.parent = parent;
 
       this.periodDepthDivisor = 10;
@@ -97,6 +99,7 @@
           useStrange,
           modifyHsv,
           colorSwap,
+          shadowMode,
           this
           )
       }

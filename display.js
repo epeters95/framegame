@@ -108,7 +108,7 @@
 
       const shadowModeConfig = document.getElementById("shadowMode");
       shadowModeConfig.addEventListener("click", () => {
-        this.shadowMode = colorSwapConfig.checked;
+        this.shadowMode = shadowModeConfig.checked;
       })
 
       const cyanConfig = document.getElementById("cyan");
@@ -190,7 +190,8 @@
         () => this.useInvert,      // use invert value
         () => this.useStrange,     // use hue alternation
         () => this.modifyHsv,      // modify hsv function
-        () => this.colorSwap       // color swap gradients
+        () => this.colorSwap,      // color swap gradients
+        () => this.shadowMode      // shadows in gradient midpoints
       );
 
       this.reset();
