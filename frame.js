@@ -323,14 +323,14 @@
         let rgbStr = this.getColor();
         let rgbStr2 = swapColors(rgbStr);
 
-        if (this.colorSwap) {
+        if (this.colorSwap()) {
           linearGradient1.addColorStop(0, swapColors(rgbStr2));
           linearGradient1.addColorStop(0.5, rgbStr);
           linearGradient1.addColorStop(1, rgbStr2)
         }
         else {
           linearGradient1.addColorStop(0, rgbStr);
-          linearGradient1.addColorStop(1, rgbStr);
+          linearGradient1.addColorStop(1, rgbStr2);
         }
 
         this.ctx.strokeStyle = linearGradient1;
