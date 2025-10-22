@@ -289,16 +289,11 @@
 
         this.ctx.lineTo(this.center[0] - pointA[0],this.center[1] -  pointA[1]);
 
-        const swapColors = (rgbStr) => {
-          let vals = rgbStr.split(",");
-          // let r = parseInt(vals[0].split("(")[1]);
-          // let g = parseInt(vals[1]);
-          // let b = parseInt(vals[2].replace(")", ""));
-          // let rgb = [r, g, b]
+        const swapColors = (r, g, b, a) => {
 
-          let r = parseInt(vals[0].split("(")[1]) * 1.1 * Math.PI / maxHue;
-          let g = parseInt(vals[1]) * 1.1 * Math.PI / maxHue;
-          let b = parseInt(vals[2].replace(")", "")) * 1.1 * Math.PI / maxHue;
+          r = r * 1.1 * Math.PI / maxHue;
+          g = g * 1.1 * Math.PI / maxHue;
+          b = b * 1.1 * Math.PI / maxHue;
           let rgb = [this.curveMultiplier * this.sinRef(r), this.curveMultiplier * this.sinRef(g), this.curveMultiplier * this.sinRef(b)]
 
           // let avg = (Math.abs(rgb[0]) + parseInt(vals[0].split("(")[1])) / 2
@@ -308,9 +303,9 @@
           // let i = rgb.indexOf(Math.max(...rgb));
           // if (i === 0) {
           //   // Rotate colors right
-             let str = "rgb(" + Math.abs(rgb[1]) + "," + Math.abs(rgb[2]) + "," + Math.abs(rgb[0]) + ")";
+             // let str = "rgb(" + Math.abs(rgb[1]) + "," + Math.abs(rgb[2]) + "," + Math.abs(rgb[0]) + ")";
              // console.log(str)
-             return str
+             // return str
           // }
           // else if (i === 1) {
           //   // Rotate colors left
@@ -318,6 +313,8 @@
           // }
           // Swap blue and red
           // return "rgb(" + b + ", " + g + ", " + r + ")";
+
+          return [Math.abs(rgb[1]), Math.abs(rgb[2]), Math.abs(rgb[0])];
         }
 
         var linearGradient1 = this.ctx.createLinearGradient(
@@ -330,40 +327,38 @@
         let colors = this.getColor();
         let rgbStr = rgbaStr(...colors);
         let rgbStr2 = rgbStr;
-        let midpoint = swapColors(rgbStr);
+
+        let apoint = [...colors];
+        let midpoint = swapColors(...colors);
+        let bpoint = [...colors];
 
         if (this.colorSwap()) {
-          let temp = rgbStr;
-          rgbStr = swapColors(midpoint);
-          rgbStr2 = midpoint;
-          midpoint = temp;
+          apoint = swapColors(...midpoint);
+          bpoint = midpoint;
+          midpoint = [...colors];
+        } else {
+          debugger
         }
 
         if (this.shadowMode()) {
 
-          colors.pop() // remove alpha
+          let alpha = midpoint.pop() // remove alpha
 
-          let hsv = this.rgb2hsv(...colors)
+          let hsv = this.rgb2hsv(...midpoint)
 
           let shadow = Math.sin(Math.PI * hsv[2] / this.depth);
 
-          let newCols = this.hsv2rgb(hsv[0], hsv[1], shadow)
-
           // colors = colors.flatMap((c, i) => maxHue - newCols[i])
-          linearGradient1.addColorStop(0, rgbStr);
-          linearGradient1.addColorStop(0.5, rgbaStr(...newCols));
-          linearGradient1.addColorStop(1, rgbStr);
+
+          midpoint = this.hsv2rgb(hsv[0], hsv[1], shadow)
+
+          // midpoint.append(alpha)
         }
 
-        else {
+        linearGradient1.addColorStop(0, rgbaStr(...apoint));
+        linearGradient1.addColorStop(0.5, rgbaStr(...midpoint));
+        linearGradient1.addColorStop(1, rgbaStr(...bpoint));
 
-          linearGradient1.addColorStop(0, rgbStr);
-          linearGradient1.addColorStop(0.5, midpoint);
-          linearGradient1.addColorStop(1, rgbStr2);
-
-        }
-
-        // TODO: convert swap colors to r,g,b args
 
 
         this.ctx.strokeStyle = linearGradient1;
