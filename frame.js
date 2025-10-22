@@ -106,7 +106,6 @@
       
       this.color = this.getColor()
 
-
     }
     // Credit: Kamil Kiełczewski
     // https://stackoverflow.com/questions/8022885/rgb-to-hsv-color-in-javascript
@@ -183,8 +182,6 @@
 
       let depth = this.depth
 
-
-
       let redShifted   = colors[0] + (Math.cos(minDepth)) / 2
       let greenShifted = colors[1] + (this.cosRef(minDepth)) / 2
       let blueShifted  = colors[2] + (this.sinRef(minDepth)) / 2
@@ -218,8 +215,6 @@
       let newCols = this.hsv2rgb(hsv[0], satVal, inverseVal)
 
       colors = colors.flatMap((c, i) => maxHue - newCols[i])
-
-
 
       // return "rgb(" + (maxHue / this.sinRef(minDepth)) + "," + (maxHue / this.cosRef(minDepth + 2)) + "," + (maxHue / (minDepth)) + ")";
       return [colors[2], colors[0], colors[1], 1 - complAngle];
@@ -274,7 +269,6 @@
 
         // let pointD_alt2 = this.translateXY([0, -(newHeightL + newHeightR) / 2])
 
-
         // Trace 4 paths
         this.ctx.beginPath();
 
@@ -289,7 +283,7 @@
 
         this.ctx.lineTo(this.center[0] - pointA[0],this.center[1] -  pointA[1]);
 
-        const swapColors = (r, g, b, a) => {
+        const swapColors = (r, g, b, a=1) => {
 
           r = r * 1.1 * Math.PI / maxHue;
           g = g * 1.1 * Math.PI / maxHue;
@@ -314,7 +308,7 @@
           // Swap blue and red
           // return "rgb(" + b + ", " + g + ", " + r + ")";
 
-          return [Math.abs(rgb[1]), Math.abs(rgb[2]), Math.abs(rgb[0])];
+          return [Math.abs(rgb[1]), Math.abs(rgb[2]), Math.abs(rgb[0]), Math.abs(a)];
         }
 
         var linearGradient1 = this.ctx.createLinearGradient(
@@ -325,8 +319,6 @@
 
 
         let colors = this.getColor();
-        let rgbStr = rgbaStr(...colors);
-        let rgbStr2 = rgbStr;
 
         let apoint = [...colors];
         let midpoint = swapColors(...colors);
@@ -336,8 +328,6 @@
           apoint = swapColors(...midpoint);
           bpoint = midpoint;
           midpoint = [...colors];
-        } else {
-          debugger
         }
 
         if (this.shadowMode()) {
@@ -346,20 +336,18 @@
 
           let hsv = this.rgb2hsv(...midpoint)
 
-          let shadow = Math.sin(Math.PI * hsv[2] / this.depth);
+          let shadow = this.sinRef(Math.PI * hsv[2] / 0.2);
 
           // colors = colors.flatMap((c, i) => maxHue - newCols[i])
 
           midpoint = this.hsv2rgb(hsv[0], hsv[1], shadow)
 
-          // midpoint.append(alpha)
+          midpoint.push(alpha)
         }
 
         linearGradient1.addColorStop(0, rgbaStr(...apoint));
         linearGradient1.addColorStop(0.5, rgbaStr(...midpoint));
         linearGradient1.addColorStop(1, rgbaStr(...bpoint));
-
-
 
         this.ctx.strokeStyle = linearGradient1;
         this.ctx.lineWidth = 2;
