@@ -61,6 +61,7 @@
       this.useInvert       = false;
       this.useStrange      = false;
       this.modifyHsv       = false;
+      this.colorSwap       = true;
       this.addHue          = null;
 
       // Config options
@@ -97,6 +98,11 @@
       const modifyHsvConfig = document.getElementById("modifyHsv");
       modifyHsvConfig.addEventListener("click", () => {
         this.modifyHsv = modifyHsvConfig.checked;
+      })
+
+      const colorSwapConfig = document.getElementById("colorSwap");
+      colorSwapConfig.addEventListener("click", () => {
+        this.colorSwap = colorSwapConfig.checked;
       })
 
       const cyanConfig = document.getElementById("cyan");
@@ -177,7 +183,9 @@
         () => this.dPointPosition, // Point D position
         () => this.useInvert,      // use invert value
         () => this.useStrange,     // use hue alternation
-        () => this.modifyHsv )     // modify hsv function
+        () => this.modifyHsv,      // modify hsv function
+        () => this.colorSwap       // color swap gradients
+      );
 
       this.reset();
     }
