@@ -4,6 +4,8 @@
   const maxHue = 255;
   const numIntervals = 6;
 
+  const rgbaStr = (r,g,b,a=1) => "rgba("+ r +","+ g +","+ b +','+ a +")";
+
   class Frame {
 
     constructor(canvas,
@@ -101,6 +103,27 @@
       
       this.color = this.getColor()
 
+
+    }
+    // Credit: Kamil Kiełczewski
+    // https://stackoverflow.com/questions/8022885/rgb-to-hsv-color-in-javascript
+
+    rgb2hsv(r,g,b) {
+      let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
+
+      let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
+      let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/complAngle));
+      
+      if (this.modifyHsv()) {
+        return [60 * (h < 0 ? h + 6 : h), v && c/(30 * complAngle), v];
+      } else {
+        return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
+      }
+    }
+
+    hsv2rgb(h,s,v) {
+      let f = (n, k=(n + h / 60) % 6) => v - v*s*Math.max( Math.min(k, 4 - k, 1), 0);
+      return [f(5),f(3),f(1)];
     }
 
     getColor() {
@@ -155,25 +178,6 @@
       let minDepth = (1.0 / this.depth) * (this.getDeltaTheta());
       minDepth = Math.max(1, minDepth);
 
-
-      // Credit: Kamil Kiełczewski
-      // https://stackoverflow.com/questions/8022885/rgb-to-hsv-color-in-javascript
-      const rgb2hsv = (r,g,b) => {
-        let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
-        let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/complAngle));
-        
-        if (this.modifyHsv()) {
-          return [60 * (h < 0 ? h + 6 : h), v && c/(30 * complAngle), v];
-        } else {
-          return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
-        }
-      }
-
-      const hsv2rgb = (h,s,v) => {
-        let f = (n, k=(n + h / 60) % 6) => v - v*s*Math.max( Math.min(k, 4 - k, 1), 0);
-        return [f(5),f(3),f(1)];
-      }
-
       let depth = this.depth
 
 
@@ -186,7 +190,7 @@
 
       // Inkblot transformations
 
-      let hsv = rgb2hsv(...colors)
+      let hsv = this.rgb2hsv(...colors)
       let sv = this.translateRef([hsv[1], hsv[2]])
 
       let inverseVal = sv[1]
@@ -208,14 +212,14 @@
 
       }
 
-      let newCols = hsv2rgb(hsv[0], satVal, inverseVal)
+      let newCols = this.hsv2rgb(hsv[0], satVal, inverseVal)
 
       colors = colors.flatMap((c, i) => maxHue - newCols[i])
 
 
 
       // return "rgb(" + (maxHue / this.sinRef(minDepth)) + "," + (maxHue / this.cosRef(minDepth + 2)) + "," + (maxHue / (minDepth)) + ")";
-      return "rgba(" + colors[2] + "," + colors[0] + "," + colors[1] + ',' + (1 - complAngle) + ")";
+      return [colors[2], colors[0], colors[1], 1 - complAngle];
     }
 
     sin(angle) {
@@ -320,18 +324,44 @@
           this.center[1] - pointC[1]);
 
 
-        let rgbStr = this.getColor();
-        let rgbStr2 = swapColors(rgbStr);
+        let colors = this.getColor();
+        let rgbStr = rgbaStr(...colors);
+        let rgbStr2 = rgbStr;
+        let midpoint = swapColors(rgbStr);
 
         if (this.colorSwap()) {
-          linearGradient1.addColorStop(0, swapColors(rgbStr2));
-          linearGradient1.addColorStop(0.5, rgbStr);
-          linearGradient1.addColorStop(1, rgbStr2)
+          let temp = rgbStr;
+          rgbStr = swapColors(midpoint);
+          rgbStr2 = midpoint;
+          midpoint = temp;
         }
-        else {
+
+        if (this.shadowMode()) {
+
+          colors.pop() // remove alpha
+
+          let hsv = this.rgb2hsv(...colors)
+
+          let shadow = Math.sin(Math.PI * hsv[2] / this.depth);
+
+          let newCols = this.hsv2rgb(hsv[0], hsv[1], shadow)
+
+          // colors = colors.flatMap((c, i) => maxHue - newCols[i])
           linearGradient1.addColorStop(0, rgbStr);
-          linearGradient1.addColorStop(1, rgbStr2);
+          linearGradient1.addColorStop(0.5, rgbaStr(...newCols));
+          linearGradient1.addColorStop(1, rgbStr);
         }
+
+        else {
+
+          linearGradient1.addColorStop(0, rgbStr);
+          linearGradient1.addColorStop(0.5, midpoint);
+          linearGradient1.addColorStop(1, rgbStr2);
+
+        }
+
+        // TODO: convert swap colors to r,g,b args
+
 
         this.ctx.strokeStyle = linearGradient1;
         this.ctx.lineWidth = 2;
