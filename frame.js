@@ -24,6 +24,7 @@
       modifyHsv,
       colorSwap,
       shadowMode,
+      useAlphas,
       parent=null) {
 
       this.canvas = canvas;
@@ -44,6 +45,7 @@
       this.modifyHsv = modifyHsv;
       this.colorSwap = colorSwap;
       this.shadowMode = shadowMode;
+      this.useAlphas = useAlphas;
       this.parent = parent;
 
       this.periodDepthDivisor = 10;
@@ -342,7 +344,15 @@
 
           midpoint = this.hsv2rgb(hsv[0], hsv[1], shadow)
 
-          midpoint.push(alpha)
+          if (this.useAlphas()) {
+            midpoint.push(alpha);
+          }
+        }
+
+        else {
+          if (!this.useAlphas()) {
+            midpoint.pop();
+          }
         }
 
         linearGradient1.addColorStop(0, rgbaStr(...apoint));

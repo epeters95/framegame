@@ -63,6 +63,7 @@
       this.modifyHsv       = false;
       this.colorSwap       = true;
       this.shadowMode      = false;
+      tihs.useAlphas       = true;
       this.addHue          = null;
 
       // Config options
@@ -109,6 +110,11 @@
       const shadowModeConfig = document.getElementById("shadowMode");
       shadowModeConfig.addEventListener("click", () => {
         this.shadowMode = shadowModeConfig.checked;
+      })
+
+      const useAlphasConfig = document.getElementById("useAlphas");
+      useAlphasConfig.addEventListener("click", () => {
+        this.useAlphas = useAlphasConfig.checked;
       })
 
       const cyanConfig = document.getElementById("cyan");
@@ -191,7 +197,8 @@
         () => this.useStrange,     // use hue alternation
         () => this.modifyHsv,      // modify hsv function
         () => this.colorSwap,      // color swap gradients
-        () => this.shadowMode      // shadows in gradient midpoints
+        () => this.shadowMode,     // shadows in gradient midpoints
+        () => this.useAlphas       // use alphas in midpoints
       );
 
       this.reset();
