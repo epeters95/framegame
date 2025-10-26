@@ -102,6 +102,7 @@
           modifyHsv,
           colorSwap,
           shadowMode,
+          useAlphas,
           this
           )
       }
@@ -322,9 +323,12 @@
 
         let colors = this.getColor();
 
+
         let apoint = [...colors];
         let midpoint = swapColors(...colors);
         let bpoint = [...colors];
+
+        let alpha = Math.max(0, midpoint[3]) / 8
 
         if (this.colorSwap()) {
           apoint = swapColors(...midpoint);
@@ -334,13 +338,12 @@
 
         if (this.shadowMode()) {
 
-          let alpha = midpoint.pop() // remove alpha
+          alpha = midpoint.pop() // remove alpha
 
           let hsv = this.rgb2hsv(...midpoint)
 
           let shadow = this.sinRef(Math.PI * hsv[2] / 0.2);
 
-          // colors = colors.flatMap((c, i) => maxHue - newCols[i])
 
           midpoint = this.hsv2rgb(hsv[0], hsv[1], shadow)
 
@@ -348,10 +351,12 @@
             midpoint.push(alpha);
           }
         }
-
         else {
-          if (!this.useAlphas()) {
-            midpoint.pop();
+
+          midpoint = midpoint.flatMap((c, i) => maxHue - midpoint[i])
+          
+          if (this.useAlphas()) {
+            midpoint[3] = alpha;
           }
         }
 

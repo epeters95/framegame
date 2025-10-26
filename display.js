@@ -63,7 +63,7 @@
       this.modifyHsv       = false;
       this.colorSwap       = true;
       this.shadowMode      = false;
-      tihs.useAlphas       = true;
+      this.useAlphas       = true;
       this.addHue          = null;
 
       // Config options
