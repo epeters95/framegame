@@ -339,6 +339,7 @@
         if (this.shadowMode()) {
 
           alpha = midpoint.pop() // remove alpha
+          midpoint = midpoint.flatMap((c, i) => maxHue - midpoint[i])
 
           let hsv = this.rgb2hsv(...midpoint)
 
@@ -353,7 +354,6 @@
         }
         else {
 
-          midpoint = midpoint.flatMap((c, i) => maxHue - midpoint[i])
           
           if (this.useAlphas()) {
             midpoint[3] = alpha;
