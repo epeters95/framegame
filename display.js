@@ -68,7 +68,7 @@
 
       // Config options
 
-      this.configOptions = { "huePeriod": true };
+      this.configOptions = { "pointD": true };
 
       let optionInputs = Array.from(document.getElementsByClassName("configOption"));
       this.optionNames = optionInputs.map((opt) => opt.id);
@@ -145,13 +145,13 @@
         sliderLength,
 
         (ratio) => { 
-          
-          if (this.configOptions["huePeriod"] === true) {
-            this.huePeriod = Math.PI * 2 * ratio
-          }
 
           if (this.configOptions["pointD"] === true) {
             this.dPointPosition = ratio
+          }
+          
+          if (this.configOptions["huePeriod"] === true) {
+            this.huePeriod = Math.PI * 2 * ratio
           }
         })
 
