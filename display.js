@@ -16,6 +16,7 @@
       this.ctx = canvas.getContext('2d');
       this.cWidth = canvasWidth;
       this.cHeight = canvasHeight;
+      this.scale = 1;
 
 
       window.addEventListener('load', () => {
@@ -142,13 +143,13 @@
         sliderX,
         sliderY,
         sliderStart,
-        sliderLength
+        sliderLength,
+        () => this.scale
         );
 
       this.slider.addConfig("huePeriod", 0, (ratio) => { this.huePeriod = Math.PI * 2 * ratio })
       this.slider.addConfig("pointD", 0, (ratio) => { this.dPointPosition = ratio }, true)
 
-      
 
 
       this.canvas.addEventListener('mousedown', () => {
@@ -222,6 +223,8 @@
       }
       this.canvas.style.width = '' + this.cWidth + 'px';
       this.canvas.style.height = '' + this.cHeight + 'px';
+
+      this.scale = this.cWidth / canvasWidth;
     }
 
     reset() {

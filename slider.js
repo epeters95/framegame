@@ -4,7 +4,7 @@
 
   class Slider {
 
-    constructor(canvas, x, y, leftWidth, length) {
+    constructor(canvas, x, y, leftWidth, length, getScale) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
       this.x = x;
@@ -15,6 +15,7 @@
       this.height = 20;
       this.configs = {};
       this.activeConfig = "";
+      this.getScale = getScale;
 
       this.initMouseListeners();
     }
@@ -80,13 +81,17 @@
 
         let padding = 4;
 
-        let x = this.getPlace();
+        let x_min = this.getScale() * (Math.min(this.x, this.getPlace()) - padding);
+        let x_max = this.getScale() * (Math.max(this.x + this.length, this.getPlace()) + padding);
+        let y_min = this.getScale() * (this.y + padding);
+        let y_max = this.getScale() * (this.y + this.height + padding);
+
         if (!this.held
-            && between(mouse.x, Math.min(this.x, this.getPlace()) - padding, Math.max(this.x + this.length, this.getPlace()) + padding)
-            && between(mouse.y, this.y + padding, this.y + this.height + padding)
+            && between(mouse.x * this.getScale(), x_min, x_max)
+            && between(mouse.y * this.getScale(), y_min, y_max)
         ) {
           this.hold();
-          this.setPlace(mouse.x)
+          this.setPlace(mouse.x * this.getScale())
         }
       }
 
