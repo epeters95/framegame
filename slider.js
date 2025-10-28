@@ -14,8 +14,31 @@
       this.held = false;
       this.height = 20;
       this.changeFunction = changeFunction;
+      this.configs = {};
+      this.activeConfig = "";
 
       this.initMouseListeners();
+    }
+
+    addConfig(name, ratio, changeFunction, active=false) {
+      let config = {};
+      config.ratio = ratio;
+      config.changeFunction = changeFunction;
+      this.configs[name] = config
+      if (active) {
+        this.activeConfig = name;
+      }
+    }
+
+    activateConfig(name) {
+      
+      // save old setting
+      let current = this.configs[this.activeConfig];
+      current.ratio = this.getRatio();
+
+      // load given setting
+      this.activeConfig = name;
+      this.setRatio(this.configs[name].ratio)
     }
 
     getHeld() {
@@ -32,6 +55,10 @@
 
     getRatio() {
       return this.leftWidth / (this.length);
+    }
+
+    setRatio(newRatio) {
+      this.leftWidth = newRatio * this.length;
     }
 
     hold() {
@@ -112,7 +139,7 @@
     }
 
     draw() {
-      this.changeFunction(this.getRatio())
+      this.configs[this.activeConfig]changeFunction(this.getRatio())
 
       let widthL = this.leftWidth;
       let widthR = this.length - widthL;
