@@ -4,7 +4,7 @@
 
   class Slider {
 
-    constructor(canvas, x, y, leftWidth, length, changeFunction) {
+    constructor(canvas, x, y, leftWidth, length) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
       this.x = x;
@@ -13,7 +13,6 @@
       this.length = length;
       this.held = false;
       this.height = 20;
-      this.changeFunction = changeFunction;
       this.configs = {};
       this.activeConfig = "";
 
@@ -139,7 +138,7 @@
     }
 
     draw() {
-      this.configs[this.activeConfig]changeFunction(this.getRatio())
+      this.configs[this.activeConfig].changeFunction(this.getRatio())
 
       let widthL = this.leftWidth;
       let widthR = this.length - widthL;

@@ -142,19 +142,13 @@
         sliderX,
         sliderY,
         sliderStart,
-        sliderLength,
+        sliderLength
+        );
 
-        (ratio) => { 
+      this.slider.addConfig("huePeriod", 0, (ratio) => { this.huePeriod = Math.PI * 2 * ratio })
+      this.slider.addConfig("pointD", 0, (ratio) => { this.dPointPosition = ratio }, true)
 
-          if (this.configOptions["pointD"] === true) {
-            this.dPointPosition = ratio
-          }
-          
-          if (this.configOptions["huePeriod"] === true) {
-            this.huePeriod = Math.PI * 2 * ratio
-          }
-        })
-
+      
 
 
       this.canvas.addEventListener('mousedown', () => {
