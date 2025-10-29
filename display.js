@@ -147,8 +147,8 @@
         () => this.scale
         );
 
-      this.slider.addConfig("huePeriod", 0, (ratio) => { this.huePeriod = Math.PI * 2 * ratio })
-      this.slider.addConfig("pointD", 0, (ratio) => { this.dPointPosition = ratio }, true)
+      this.slider.addConfig("huePeriod", 0, (ratio) => { this.huePeriod = Math.PI * 2 * ratio }, true)
+      this.slider.addConfig("pointD", 0, (ratio) => { this.dPointPosition = ratio })
 
 
 
