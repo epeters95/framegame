@@ -67,21 +67,6 @@
       this.useAlphas       = true;
       this.addHue          = null;
 
-      // Config options
-
-      this.configOptions = { "pointD": true };
-
-      let optionInputs = Array.from(document.getElementsByClassName("configOption"));
-      this.optionNames = optionInputs.map((opt) => opt.id);
-
-      optionInputs.forEach((optInput) => {
-        
-        optInput.addEventListener("click", () => {
-          this.optionNames.forEach((optName) => { this.configOptions[optName] = false})
-          this.configOptions[optInput.id] = optInput.checked;
-        });
-      });
-
       const clearConfig = document.getElementById("clearBackground");
       clearConfig.addEventListener("click", () => {
         this.clearBackground = clearConfig.checked;
@@ -149,6 +134,22 @@
 
       this.slider.addConfig("huePeriod", 0, (ratio) => { this.huePeriod = Math.PI * 2 * ratio }, true)
       this.slider.addConfig("pointD", 0, (ratio) => { this.dPointPosition = ratio })
+
+      // Config options
+
+      this.configOptions = { "pointD": true };
+
+      let optionInputs = Array.from(document.getElementsByClassName("configOption"));
+      this.optionNames = optionInputs.map((opt) => opt.id);
+
+      optionInputs.forEach((optInput) => {
+        
+        optInput.addEventListener("click", () => {
+          this.optionNames.forEach((optName) => { this.configOptions[optName] = false})
+          this.configOptions[optInput.id] = optInput.checked;
+          this.slider.activateConfig(optName)
+        });
+      });
 
 
 

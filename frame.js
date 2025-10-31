@@ -147,10 +147,6 @@
         let isigF = (t) => incF(t);
         let dsigF = (t) => decF(t);
 
-        // if (this.useSigmoid()) {
-        //   isigF = (t) => incF(sigmoid(t))
-        //   dsigF = (t) => decF(sigmoid(t))
-        // }
 
         let fArray = [
           [ maxF, isigF, minF ],
@@ -219,7 +215,6 @@
 
       colors = colors.flatMap((c, i) => maxHue - newCols[i])
 
-      // return "rgb(" + (maxHue / this.sinRef(minDepth)) + "," + (maxHue / this.cosRef(minDepth + 2)) + "," + (maxHue / (minDepth)) + ")";
       return [colors[2], colors[0], colors[1], 1 - complAngle];
     }
 
