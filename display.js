@@ -139,7 +139,7 @@
 
       this.configOptions = { "pointD": true };
 
-      let optionInputs = Array.from(document.getElementsByClassName("configOption"));
+      let optionInputs = Array.from(document.getElementsByClassName("config-radio"));
       this.optionNames = optionInputs.map((opt) => opt.id);
 
       optionInputs.forEach((optInput) => {
@@ -151,7 +151,7 @@
         });
       });
 
-
+      debugger;
 
       this.canvas.addEventListener('mousedown', () => {
         
