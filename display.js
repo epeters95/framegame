@@ -56,6 +56,8 @@
       this.dPointPosition = 1;
 
       this.holding         = false;
+
+      // Configs
       this.clearBackground = false;
       this.showSliders     = true;
       this.useHueConfig    = false;
@@ -67,56 +69,18 @@
       this.useAlphas       = true;
       this.addHue          = null;
 
+
+      this.configValues = {};
+      Array.from(document.getElementsByClassName("config-checkbox"))
+        .foreach( (opt) => {
+          this.configValues[opt.id] = opt.checked
+        });
+
       const clearConfig = document.getElementById("clearBackground");
       clearConfig.addEventListener("click", () => {
         this.clearBackground = clearConfig.checked;
         this.addHue = null;
       })
-
-      const invertConfig = document.getElementById("invert");
-      invertConfig.addEventListener("click", () => {
-        this.useInvert = invertConfig.checked;
-      })
-
-      const strangeConfig = document.getElementById("strange");
-      strangeConfig.addEventListener("click", () => {
-        this.useStrange = strangeConfig.checked;
-      })
-
-      const modifyHsvConfig = document.getElementById("modifyHsv");
-      modifyHsvConfig.addEventListener("click", () => {
-        this.modifyHsv = modifyHsvConfig.checked;
-      })
-
-      const colorSwapConfig = document.getElementById("colorSwap");
-      colorSwapConfig.addEventListener("click", () => {
-        this.colorSwap = colorSwapConfig.checked;
-      })
-
-      const shadowModeConfig = document.getElementById("shadowMode");
-      shadowModeConfig.addEventListener("click", () => {
-        this.shadowMode = shadowModeConfig.checked;
-      })
-
-      const useAlphasConfig = document.getElementById("useAlphas");
-      useAlphasConfig.addEventListener("click", () => {
-        this.useAlphas = useAlphasConfig.checked;
-      })
-
-      const cyanConfig = document.getElementById("cyan");
-      cyanConfig.addEventListener("click", () => {
-        this.addHue = "cyan";
-      });
-
-      const magentaConfig = document.getElementById("magenta");
-      magentaConfig.addEventListener("click", () => {
-        this.addHue = "magenta";
-      });
-
-      const yellowConfig = document.getElementById("yellow");
-      yellowConfig.addEventListener("click", () => {
-        this.addHue = "yellow";
-      });
 
       const sliderStart = 0;
       const sliderLength = 860;
@@ -150,8 +114,6 @@
           this.slider.activateConfig(optName)
         });
       });
-
-      debugger;
 
       this.canvas.addEventListener('mousedown', () => {
         
