@@ -54,18 +54,20 @@
       this.huePeriod      = 0;
 
       this.dPointPosition = 1;
+      this.holding        = false;
 
-      this.holding         = false;
-      this.clearBackground = false;
-      this.showSliders     = true;
-      this.useHueConfig    = false;
-      this.useInvert       = false;
-      this.useStrange      = false;
-      this.modifyHsv       = false;
-      this.colorSwap       = true;
-      this.shadowMode      = false;
-      this.useAlphas       = true;
-      this.addHue          = null;
+      this.configValues = {
+        clearBackground: false,
+        showSliders:     true,  // unused
+        useHueConfig:    false, // unused
+        useInvert:       false,
+        useStrange:      false,
+        modifyHsv:       false,
+        colorSwap:       true,
+        shadowMode:      false,
+        useAlphas:       true,
+        addHue:          null
+      }
 
       const clearConfig = document.getElementById("clearBackground");
       clearConfig.addEventListener("click", () => {
@@ -105,17 +107,17 @@
 
       const cyanConfig = document.getElementById("cyan");
       cyanConfig.addEventListener("click", () => {
-        this.addHue = "cyan";
+        this.configValues.addHue = "cyan";
       });
 
       const magentaConfig = document.getElementById("magenta");
       magentaConfig.addEventListener("click", () => {
-        this.addHue = "magenta";
+        this.configValues.addHue = "magenta";
       });
 
       const yellowConfig = document.getElementById("yellow");
       yellowConfig.addEventListener("click", () => {
-        this.addHue = "yellow";
+        this.configValues.addHue = "yellow";
       });
 
       const sliderStart = 0;
@@ -189,12 +191,12 @@
         () => this.depth,          // depth
         () => this.huePeriod,      // period
         () => this.dPointPosition, // Point D position
-        () => this.useInvert,      // use invert value
-        () => this.useStrange,     // use hue alternation
-        () => this.modifyHsv,      // modify hsv function
-        () => this.colorSwap,      // color swap gradients
-        () => this.shadowMode,     // shadows in gradient midpoints
-        () => this.useAlphas       // use alphas in midpoints
+        () => this.configValues.useInvert,      // use invert value
+        () => this.configValues.useStrange,     // use hue alternation
+        () => this.configValues.modifyHsv,      // modify hsv function
+        () => this.configValues.colorSwap,      // color swap gradients
+        () => this.configValues.shadowMode,     // shadows in gradient midpoints
+        () => this.configValues.useAlphas       // use alphas in midpoints
       );
 
       this.reset();
@@ -241,11 +243,11 @@
       this.idleDelta += this.idleInc;
 
       // Fill background
-      if (this.clearBackground) {
+      if (this.configValues.clearBackground) {
         this.ctx.clearRect(0, 0, this.frameWidth, this.frameHeight);
         this.ctx.fillStyle = this.bgColor;
-        if (this.addHue !== null) {
-          this.ctx.fillStyle = this.addHue;
+        if (this.configValues.addHue !== null) {
+          this.ctx.fillStyle = this.configValues.addHue;
         } else {
           this.ctx.fillStyle = "#000000";
         }
@@ -287,7 +289,7 @@
       
       this.draw();
 
-      if (this.showSliders) {
+      if (this.configValues.showSliders) {
         // Clear slider area
         this.ctx.clearRect(0, 0, this.frameWidth, this.slider.height);
         this.ctx.fillStyle = this.bgColor;
