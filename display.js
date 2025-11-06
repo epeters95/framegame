@@ -70,9 +70,8 @@
       }
 
 
-      this.configValues = {};
       Array.from(document.getElementsByClassName("config-checkbox"))
-        .foreach( (opt) => {
+        .forEach( (opt) => {
 
           // Add Hue special case
           if (["cyan", "magenta", "yellow"].includes(opt.id) ) {
@@ -208,7 +207,7 @@
 
       // Fill background
       if (this.configValues.clearBackground) {
-        
+
         this.ctx.clearRect(0, 0, this.frameWidth, this.frameHeight);
         this.ctx.fillStyle = this.bgColor;
 
