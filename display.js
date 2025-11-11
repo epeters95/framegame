@@ -118,6 +118,18 @@
         });
       });
 
+      // Custom field
+
+      const computeEngine = new ComputeEngine.ComputeEngine();
+      let mathField = document.getElementById("custom-math-field");
+      // TODO: add click listener
+
+      const expression = computeEngine.parse(mathField.value);
+      const customFunction = expression.compile(); 
+
+
+      // Slider logic
+
       this.canvas.addEventListener('mousedown', () => {
         
         if (!this.slider.getHeld()) {
