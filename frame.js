@@ -36,7 +36,7 @@
       this.getHuePeriod = getHuePeriod;
       this.getPointDPosition = getPointDPosition;
 
-      this.useInvert = configFunctions.useInvert;
+      this.configFunctions = configFunctions.useInvert;
       this.useStrange = configFunctions.useStrange;
       this.modifyHsv = configFunctions.modifyHsv;
       this.colorSwap = configFunctions.colorSwap;
@@ -93,12 +93,7 @@
           () => this.depth - 1,
           getHuePeriod,
           getPointDPosition,
-          useInvert,
-          useStrange,
-          modifyHsv,
-          colorSwap,
-          shadowMode,
-          useAlphas,
+          configFunctions,
           this
           )
       }
@@ -115,7 +110,7 @@
       let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
       let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/complAngle));
       
-      if (this.modifyHsv()) {
+      if (this.configFunctions.modifyHsv()) {
         return [60 * (h < 0 ? h + 6 : h), v && c/(30 * complAngle), v];
       } else {
         return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
@@ -191,13 +186,13 @@
       let inverseVal = sv[1]
       let satVal = 1 - sv[0]
 
-      if (this.useInvert()) {
+      if (this.configFunctions.useInvert()) {
         inverseVal = 1 - inverseVal;
       }
 
       // Opposite frames invert colors
 
-      if (this.useStrange()) {
+      if (this.configFunctions.useStrange()) {
         
         if (depth % 2 === 0) {
           satVal = (this.cos(Math.PI * hsv[0] / 20) + satVal) / 2
@@ -321,13 +316,13 @@
 
         let alpha = Math.max(0, midpoint[3]) / 8
 
-        if (this.colorSwap()) {
+        if (this.configFunctions.colorSwap()) {
           apoint = swapColors(...midpoint);
           bpoint = midpoint;
           midpoint = [...colors];
         }
 
-        if (this.shadowMode()) {
+        if (this.configFunctions.shadowMode()) {
 
           alpha = midpoint.pop() // remove alpha
           midpoint = midpoint.flatMap((c, i) => maxHue - midpoint[i])
@@ -339,14 +334,14 @@
 
           midpoint = this.hsv2rgb(hsv[0], hsv[1], shadow)
 
-          if (this.useAlphas()) {
+          if (this.configFunctions.useAlphas()) {
             midpoint.push(alpha);
           }
         }
         else {
 
           
-          if (this.useAlphas()) {
+          if (this.configFunctions.useAlphas()) {
             midpoint[3] = alpha;
           }
         }
