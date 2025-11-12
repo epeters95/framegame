@@ -106,6 +106,11 @@
 
       this.configOptions = { "pointD": true };
 
+      // Object hash of key -> () => config.value
+
+      let configFunctions = Object.keys(this.configValues)
+                                  .reduce((obj, val) => ({ ...obj, [val]: () => this.configValues[val]}))
+
       let optionInputs = Array.from(document.getElementsByClassName("config-radio"));
       this.optionNames = optionInputs.map((opt) => opt.id);
 
@@ -166,12 +171,7 @@
         () => this.depth,          // depth
         () => this.huePeriod,      // period
         () => this.dPointPosition, // Point D position
-        () => this.configValues.useInvert,      // use invert value
-        () => this.configValues.useStrange,     // use hue alternation
-        () => this.configValues.modifyHsv,      // modify hsv function
-        () => this.configValues.colorSwap,      // color swap gradients
-        () => this.configValues.shadowMode,     // shadows in gradient midpoints
-        () => this.configValues.useAlphas       // use alphas in midpoints
+        configFunctions            // config return functions
       );
 
       this.reset();

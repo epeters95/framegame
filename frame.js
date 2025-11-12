@@ -19,12 +19,7 @@
       getDepth,
       getHuePeriod,
       getPointDPosition,
-      useInvert,
-      useStrange,
-      modifyHsv,
-      colorSwap,
-      shadowMode,
-      useAlphas,
+      configFunctions,
       parent=null) {
 
       this.canvas = canvas;
@@ -40,12 +35,13 @@
       this.reductionRate = getReductionRate();
       this.getHuePeriod = getHuePeriod;
       this.getPointDPosition = getPointDPosition;
-      this.useInvert = useInvert;
-      this.useStrange = useStrange;
-      this.modifyHsv = modifyHsv;
-      this.colorSwap = colorSwap;
-      this.shadowMode = shadowMode;
-      this.useAlphas = useAlphas;
+
+      this.useInvert = configFunctions.useInvert;
+      this.useStrange = configFunctions.useStrange;
+      this.modifyHsv = configFunctions.modifyHsv;
+      this.colorSwap = configFunctions.colorSwap;
+      this.shadowMode = configFunctions.shadowMode;
+      this.useAlphas = configFunctions.useAlphas;
       this.parent = parent;
 
       this.periodDepthDivisor = 10;
