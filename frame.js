@@ -54,6 +54,8 @@
       this.bgColor = "black";
       this.fgColor = "white";
 
+      this.customFactor = 0.5;
+
       if (parent === null) {
 
         this.sinRef = Math.sin;
@@ -127,6 +129,10 @@
         return 2 * Math.PI / (1 + Math.exp(-z + Math.PI));
       }
       const hue = (period, interval, t) => {
+
+        if (typeof(this.configFunctions.customMath) === 'function') {
+          t = t + this.customFactor * this.configFunctions.customMath({ x: t});
+        }
 
         period += this.getHuePeriod()
 
