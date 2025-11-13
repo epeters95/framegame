@@ -127,11 +127,13 @@
 
       const computeEngine = new ComputeEngine.ComputeEngine();
       let mathField = document.getElementById("custom-math-field");
-      // TODO: add click listener
 
       const expression = computeEngine.parse(mathField.value);
       const customFunction = expression.compile(); 
 
+      mathField.addEventListener("click", () => {
+        this.configOptions["customMath"] = customFunction;
+      })
 
       // Slider logic
 
