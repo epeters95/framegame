@@ -36,12 +36,7 @@
       this.getHuePeriod = getHuePeriod;
       this.getPointDPosition = getPointDPosition;
 
-      this.configFunctions = configFunctions.useInvert;
-      this.useStrange = configFunctions.useStrange;
-      this.modifyHsv = configFunctions.modifyHsv;
-      this.colorSwap = configFunctions.colorSwap;
-      this.shadowMode = configFunctions.shadowMode;
-      this.useAlphas = configFunctions.useAlphas;
+      this.configFunctions = configFunctions;
       this.parent = parent;
 
       this.periodDepthDivisor = 10;

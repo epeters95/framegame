@@ -109,7 +109,7 @@
       // Object hash of key -> () => config.value
 
       let configFunctions = Object.keys(this.configValues)
-                                  .reduce((obj, val) => ({ ...obj, [val]: () => this.configValues[val]}))
+                                  .reduce((obj, val) => ({ ...obj, [val]: () => this.configValues[val]}), {})
 
       let optionInputs = Array.from(document.getElementsByClassName("config-radio"));
       this.optionNames = optionInputs.map((opt) => opt.id);
