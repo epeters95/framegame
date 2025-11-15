@@ -108,7 +108,7 @@
 
       // Object hash of key -> () => config.value
 
-      let configFunctions = Object.keys(this.configValues)
+      this.configFunctions = Object.keys(this.configValues)
                                   .reduce((obj, val) => ({ ...obj, [val]: () => this.configValues[val]}), {})
 
       let optionInputs = Array.from(document.getElementsByClassName("config-radio"));
@@ -132,7 +132,7 @@
       const customFunction = expression.compile(); 
 
       mathField.addEventListener("change", () => {
-        this.configOptions["customMath"] = customFunction;
+        this.configFunctions["customMath"] = customFunction;
       })
 
       // Slider logic
@@ -173,7 +173,7 @@
         () => this.depth,          // depth
         () => this.huePeriod,      // period
         () => this.dPointPosition, // Point D position
-        configFunctions            // config return functions
+        this.configFunctions       // config return functions
       );
 
       this.reset();
