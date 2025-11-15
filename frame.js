@@ -126,7 +126,7 @@
       const hue = (period, interval, t) => {
 
         if (typeof(this.configFunctions.customMath) === 'function') {
-          t = t + this.customFactor * this.configFunctions.customMath({ x: t});
+          t = t + this.customFactor * this.configFunctions.customMath(t);
         }
 
         period += this.getHuePeriod()
