@@ -49,7 +49,7 @@
       this.bgColor = "black";
       this.fgColor = "white";
 
-      this.customFactor = 0.5;
+      this.customFactor = 0.2;
 
       if (parent === null) {
 
@@ -129,7 +129,12 @@
           t = t + this.customFactor * this.configFunctions.customMath(t);
         }
 
+
+        // Add custom function of hue period multiplied by reduction factor
         period += this.getHuePeriod()
+        if (typeof(this.configFunctions.customMath) === 'function') {
+          period += this.customFactor * this.configFunctions.customMath(this.getHuePeriod());
+        }
 
         let maxF = (t) => maxHue;// + 0.5 * Math.sin(t);
         let minF = (t) => 0.5 * Math.sin(t);
