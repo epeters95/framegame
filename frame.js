@@ -126,11 +126,11 @@
       const hue = (period, interval, t) => {
 
         // Add custom function of hue period multiplied by reduction factor
-        period += this.getHuePeriod()
-        if (typeof(this.configFunctions.customMath) === 'function') {
-          let factor = this.customFactor * this.configFunctions.customMath(this.getHuePeriod());
-          period += factor;
-        }
+        // period += this.getHuePeriod()
+        // if (typeof(this.configFunctions.customMath) === 'function') {
+        //   let factor = this.customFactor * this.configFunctions.customMath(this.getHuePeriod());
+        //   period += factor;
+        // }
 
         let maxF = (t) => maxHue;// + 0.5 * Math.sin(t);
         let minF = (t) => 0.5 * Math.sin(t);
@@ -154,8 +154,13 @@
         if (fArray[i] === undefined) {
           return null;
         }
+
+        let huePeriod = this.getHuePeriod();
         return fArray[i].map( (f, idx) => {
-          let resultHue = Math.round(f(t))
+          let v = f(t)
+          let factor = v + this.customFactor * this.configFunctions.customMath(v);
+          let resultHue = Math.round( Math.max(0, Math.min(255, factor)))
+          debugger
           return resultHue;
         })
       };
