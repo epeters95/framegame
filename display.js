@@ -132,6 +132,8 @@
       const customFunction = expression.compile(); 
 
       mathField.addEventListener("change", () => {
+        expression = computeEngine.parse(mathField.value);
+        customFunction = expression.compile(); 
         this.configFunctions["customMath"] = customFunction;
       })
 
