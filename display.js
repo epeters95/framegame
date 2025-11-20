@@ -128,10 +128,12 @@
       const computeEngine = new ComputeEngine.ComputeEngine();
       let mathField = document.getElementById("custom-math-field");
 
-      const expression = computeEngine.parse(mathField.value);
-      const customFunction = expression.compile(); 
-
+      debugger
+      
       mathField.addEventListener("change", () => {
+
+        const expression = computeEngine.parse(mathField.value);
+        const customFunction = expression.compile(); 
         this.configFunctions["customMath"] = customFunction;
       })
 

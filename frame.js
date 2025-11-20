@@ -160,7 +160,7 @@
         return fArray[i].map( (f, idx) => {
           let v = f(t)
           if (typeof(customMath) === 'function') {
-            v += customFactor * customMath(v);
+            v += customFactor * customMath({x: v});
           }
           let resultHue = Math.round( Math.max(0, Math.min(255, v)))
           return resultHue;
