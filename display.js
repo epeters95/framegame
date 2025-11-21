@@ -124,16 +124,11 @@
       });
 
       // Custom field
-
-      const computeEngine = new ComputeEngine.ComputeEngine();
-      let mathField = document.getElementById("custom-math-field");
-
-      const expression = computeEngine.parse(mathField.value);
-      const customFunction = expression.compile(); 
-
+      
       mathField.addEventListener("change", () => {
-        expression = computeEngine.parse(mathField.value);
-        customFunction = expression.compile(); 
+
+        const expression = computeEngine.parse(mathField.value);
+        const customFunction = expression.compile();
         this.configFunctions["customMath"] = customFunction;
       })
 
