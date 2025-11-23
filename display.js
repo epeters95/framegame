@@ -136,7 +136,7 @@
 
       let factorInput = document.getElementById("custom-factor")
       factorInput.addEventListener("change", (e) => {
-        this.customFactor = parseFloat(factorInput);
+        this.customFactor = parseFloat(e.target.value);
       }
 
       // Slider logic
