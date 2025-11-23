@@ -56,6 +56,8 @@
       this.dPointPosition = 1;
       this.holding        = false;
 
+      this.customFactor = 0.1;
+
       this.configValues = {
         clearBackground: false,
         showSliders:     true,  // unused
@@ -131,6 +133,11 @@
         const customFunction = expression.compile();
         this.configFunctions["customMath"] = customFunction;
       })
+
+      let factorInput = document.getElementById("custom-factor")
+      factorInput.addEventListener("change", (e) => {
+        this.customFactor = parseFloat(factorInput);
+      }
 
       // Slider logic
 
