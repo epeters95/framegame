@@ -139,7 +139,6 @@
 
       let factorInput = document.getElementById("custom-factor")
       factorInput.addEventListener("change", (e) => {
-        debugger
         this.customFactor = parseFloat(e.target.value);
       })
 
