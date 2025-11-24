@@ -126,6 +126,9 @@
       });
 
       // Custom field
+
+      const computeEngine = new ComputeEngine.ComputeEngine();
+      let mathField = document.getElementById("custom-math-field");
       
       mathField.addEventListener("change", () => {
 
@@ -136,8 +139,9 @@
 
       let factorInput = document.getElementById("custom-factor")
       factorInput.addEventListener("change", (e) => {
+        debugger
         this.customFactor = parseFloat(e.target.value);
-      }
+      })
 
       // Slider logic
 
