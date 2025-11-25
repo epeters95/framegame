@@ -19,7 +19,7 @@
       getDepth,
       getHuePeriod,
       getPointDPosition,
-      configFunctions,
+      getConfigFunctions,
       parent=null) {
 
       this.canvas = canvas;
@@ -36,7 +36,7 @@
       this.getHuePeriod = getHuePeriod;
       this.getPointDPosition = getPointDPosition;
 
-      this.configFunctions = configFunctions;
+      this.getConfigFunctions = getConfigFunctions;
       this.parent = parent;
 
       this.periodDepthDivisor = 10;
@@ -90,7 +90,7 @@
           () => this.depth - 1,
           getHuePeriod,
           getPointDPosition,
-          configFunctions,
+          getConfigFunctions,
           this
           )
       }
@@ -107,7 +107,7 @@
       let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
       let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/complAngle));
       
-      if (this.configFunctions.modifyHsv()) {
+      if (this.getConfigFunctions().modifyHsv()) {
         return [60 * (h < 0 ? h + 6 : h), v && c/(30 * complAngle), v];
       } else {
         return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
@@ -156,11 +156,11 @@
         }
 
         let customFactor = this.customFactor;
-        let customMath = this.configFunctions.customMath;
+        let customMath = this.getConfigFunctions().customMath;
         return fArray[i].map( (f, idx) => {
           let v = f(t)
           if (typeof(customMath) === 'function') {
-            v -= customFactor * customMath({x: v});
+            v += customFactor * customMath(v);
           }
           let resultHue = Math.round( Math.max(0, Math.min(255, v)))
           return resultHue;
@@ -195,13 +195,13 @@
       let inverseVal = sv[1]
       let satVal = 1 - sv[0]
 
-      if (this.configFunctions.useInvert()) {
+      if (this.getConfigFunctions().useInvert()) {
         inverseVal = 1 - inverseVal;
       }
 
       // Opposite frames invert colors
 
-      if (this.configFunctions.useStrange()) {
+      if (this.getConfigFunctions().useStrange()) {
         
         if (depth % 2 === 0) {
           satVal = (this.cos(Math.PI * hsv[0] / 20) + satVal) / 2
@@ -325,13 +325,13 @@
 
         let alpha = Math.max(0, midpoint[3]) / 8
 
-        if (this.configFunctions.colorSwap()) {
+        if (this.getConfigFunctions().colorSwap()) {
           apoint = swapColors(...midpoint);
           bpoint = midpoint;
           midpoint = [...colors];
         }
 
-        if (this.configFunctions.shadowMode()) {
+        if (this.getConfigFunctions().shadowMode()) {
 
           alpha = midpoint.pop() // remove alpha
           midpoint = midpoint.flatMap((c, i) => maxHue - midpoint[i])
@@ -343,14 +343,14 @@
 
           midpoint = this.hsv2rgb(hsv[0], hsv[1], shadow)
 
-          if (this.configFunctions.useAlphas()) {
+          if (this.getConfigFunctions().useAlphas()) {
             midpoint.push(alpha);
           }
         }
         else {
 
           
-          if (this.configFunctions.useAlphas()) {
+          if (this.getConfigFunctions().useAlphas()) {
             midpoint[3] = alpha;
           }
         }

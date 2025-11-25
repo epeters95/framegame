@@ -180,7 +180,7 @@
         () => this.depth,          // depth
         () => this.huePeriod,      // period
         () => this.dPointPosition, // Point D position
-        this.configFunctions       // config return functions
+        () => this.configFunctions       // config return functions
       );
 
       this.reset();
