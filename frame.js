@@ -125,14 +125,9 @@
       }
       const hue = (period, interval, t) => {
 
-        // Add custom function of hue period multiplied by reduction factor
-        // if (typeof(this.configFunctions.customMath) === 'function') {
-        //   let factor = this.customFactor * this.configFunctions.customMath(this.getHuePeriod());
-        //   period += factor;
-        // }
         period += this.getHuePeriod()
 
-        let maxF = (t) => maxHue;// + 0.5 * Math.sin(t);
+        let maxF = (t) => maxHue;
         let minF = (t) => 0.5 * Math.sin(t);
         let incF = (t) => (maxHue / interval) * ((t + period) % interval);
         let decF = (t) => (maxHue / interval) * (interval - ((t + period) % interval));
@@ -265,8 +260,6 @@
           pointD[0] - this.getPointDPosition() * pointD_alt[0],
           pointD[1] - this.getPointDPosition() * pointD_alt[1] ];
 
-        // let pointD_alt2 = this.translateXY([0, -(newHeightL + newHeightR) / 2])
-
         // Trace 4 paths
         this.ctx.beginPath();
 
@@ -276,7 +269,6 @@
 
         this.ctx.lineTo(this.center[0] - pointC[0],this.center[1] -  pointC[1]);
 
-        // this.ctx.lineTo(this.center[0] - pointD[0],this.center[1] -  pointD[1]);
         this.ctx.lineTo(this.center[0] - pointD_alt_between[0],this.center[1] -  pointD_alt_between[1]);
 
         this.ctx.lineTo(this.center[0] - pointA[0],this.center[1] -  pointA[1]);
@@ -287,24 +279,6 @@
           g = g * 1.1 * Math.PI / maxHue;
           b = b * 1.1 * Math.PI / maxHue;
           let rgb = [this.curveMultiplier * this.sinRef(r), this.curveMultiplier * this.sinRef(g), this.curveMultiplier * this.sinRef(b)]
-
-          // let avg = (Math.abs(rgb[0]) + parseInt(vals[0].split("(")[1])) / 2
-          // let avg2 = (Math.abs(rgb[1]) + parseInt(vals[1])) / 2
-          // let avg3 = (Math.abs(rgb[2]) + parseInt(vals[2].replace(")", ""))) / 2
-
-          // let i = rgb.indexOf(Math.max(...rgb));
-          // if (i === 0) {
-          //   // Rotate colors right
-             // let str = "rgb(" + Math.abs(rgb[1]) + "," + Math.abs(rgb[2]) + "," + Math.abs(rgb[0]) + ")";
-             // console.log(str)
-             // return str
-          // }
-          // else if (i === 1) {
-          //   // Rotate colors left
-          //   return "rgb(" + g + "," + b + "," + r + ")";
-          // }
-          // Swap blue and red
-          // return "rgb(" + b + ", " + g + ", " + r + ")";
 
           return [Math.abs(rgb[1]), Math.abs(rgb[2]), Math.abs(rgb[0]), Math.abs(a)];
         }
