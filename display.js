@@ -60,8 +60,6 @@
 
       this.configValues = {
         clearBackground: false,
-        showSliders:     true,  // unused
-        useHueConfig:    false, // unused
         useInvert:       false,
         useStrange:      false,
         modifyHsv:       false,
