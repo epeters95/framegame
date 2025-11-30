@@ -168,17 +168,17 @@
 
       this.frame = new Frame(
         this.canvas,
-        [this.centerX, this.centerY], // center
-        this.frameWidth,              // width
-        this.frameHeight,             // height
-        radius,                       // radius
-        this.theta,                   // theta
-        () => this.deltaTheta,        // deltaTheta
-        () => this.shrinkFactor,      // reductionRate
-        () => this.depth,             // depth
-        () => this.huePeriod,         // period
-        () => this.dPointPosition,    // Point D position
-        () => this.configFunctions    // config return functions
+        [this.centerX, this.centerY],    // center
+        this.frameWidth,                 // width
+        this.frameHeight,                // height
+        radius,                          // radius
+        this.theta,                      // theta
+        () => this.deltaTheta,           // deltaTheta
+        () => this.shrinkFactor,         // reductionRate
+        () => this.depth,                // depth
+        () => this.huePeriod,            // period
+        () => this.dPointPosition,       // Point D position
+        () => this.configFunctions       // config return functions
       );
 
       this.reset();

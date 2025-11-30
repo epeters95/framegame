@@ -129,7 +129,7 @@
         // Add custom function of hue period multiplied by reduction factor
         period += this.getHuePeriod()
 
-        let maxF = (t) => maxHue;// + 0.5 * Math.sin(t);
+        let maxF = (t) => maxHue;
         let minF = (t) => 0.5 * Math.sin(t);
         let incF = (t) => (maxHue / interval) * ((t + period) % interval);
         let decF = (t) => (maxHue / interval) * (interval - ((t + period) % interval));
@@ -262,8 +262,6 @@
           pointD[0] - this.getPointDPosition() * pointD_alt[0],
           pointD[1] - this.getPointDPosition() * pointD_alt[1] ];
 
-        // let pointD_alt2 = this.translateXY([0, -(newHeightL + newHeightR) / 2])
-
         // Trace 4 paths
         this.ctx.beginPath();
 
@@ -273,7 +271,6 @@
 
         this.ctx.lineTo(this.center[0] - pointC[0],this.center[1] -  pointC[1]);
 
-        // this.ctx.lineTo(this.center[0] - pointD[0],this.center[1] -  pointD[1]);
         this.ctx.lineTo(this.center[0] - pointD_alt_between[0],this.center[1] -  pointD_alt_between[1]);
 
         this.ctx.lineTo(this.center[0] - pointA[0],this.center[1] -  pointA[1]);
