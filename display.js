@@ -56,7 +56,6 @@
       this.dPointPosition = 1;
       this.holding        = false;
 
-      this.customFactor = 0.1;
 
       this.configValues = {
         clearBackground: false,
@@ -66,7 +65,8 @@
         colorSwap:       true,
         shadowMode:      false,
         useAlphas:       true,
-        addHue:          null
+        addHue:          null,
+        customFactor:    0.1
       }
 
 
@@ -81,6 +81,9 @@
             this.configValues[opt.id] = opt.checked;
             if (opt.id === "clearBackground") {
               this.configValues.addHue = null;
+            }
+            else if (opt.id === "customFactor") {
+              this.configValues.customFactor = opt.value;
             }
           }
         });
@@ -137,7 +140,7 @@
 
       let factorInput = document.getElementById("custom-factor")
       factorInput.addEventListener("change", (e) => {
-        this.customFactor = parseFloat(e.target.value) / 100;
+        this.configValues.customFactor = parseFloat(e.target.value) / 100;
       })
 
       // Slider logic
