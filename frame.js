@@ -121,6 +121,8 @@
     }
 
     getColor() {
+      let configFunctions = this.getConfigFunctions();
+
       const sigmoid = (z) => {
         return 2 * Math.PI / (1 + Math.exp(-z + Math.PI));
       }
@@ -153,7 +155,7 @@
         }
 
         let customFactor = this.customFactor;
-        let customMath = this.getConfigFunctions().customMath;
+        let customMath = configFunctions.customMath;
         return fArray[i].map( (f, idx) => {
           let v = f(t)
           if (typeof(customMath) === 'function') {
@@ -192,13 +194,13 @@
       let inverseVal = sv[1]
       let satVal = 1 - sv[0]
 
-      if (this.getConfigFunctions().useInvert()) {
+      if (configFunctions.useInvert()) {
         inverseVal = 1 - inverseVal;
       }
 
       // Opposite frames invert colors
 
-      if (this.getConfigFunctions().useStrange()) {
+      if (configFunctions.useStrange()) {
         
         if (depth % 2 === 0) {
           satVal = (this.cos(Math.PI * hsv[0] / 20) + satVal) / 2
@@ -232,6 +234,8 @@
     }
     
     draw() {
+
+      let configFunctions = this.getConfigFunctions();
 
       if (this.subFrame) {
 
@@ -301,13 +305,13 @@
 
         let alpha = Math.max(0, midpoint[3]) / 8
 
-        if (this.getConfigFunctions().colorSwap()) {
+        if (configFunctions.colorSwap()) {
           apoint = swapColors(...midpoint);
           bpoint = midpoint;
           midpoint = [...colors];
         }
 
-        if (this.getConfigFunctions().shadowMode()) {
+        if (configFunctions.shadowMode()) {
 
           alpha = midpoint.pop() // remove alpha
           midpoint = midpoint.flatMap((c, i) => maxHue - midpoint[i])
@@ -319,14 +323,14 @@
 
           midpoint = this.hsv2rgb(hsv[0], hsv[1], shadow)
 
-          if (this.getConfigFunctions().useAlphas()) {
+          if (configFunctions.useAlphas()) {
             midpoint.push(alpha);
           }
         }
         else {
 
           
-          if (this.getConfigFunctions().useAlphas()) {
+          if (configFunctions.useAlphas()) {
             midpoint[3] = alpha;
           }
         }
