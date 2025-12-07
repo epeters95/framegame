@@ -264,13 +264,6 @@
         this.shrinkFactor -= this.shrinkInc;
       }
 
-      if (this.debug) {
-        console.log("Display state:")
-        Object.keys(this.configValues).forEach((config) => {
-          console.log(config + ": " + this.configValues[config])
-        });
-      }
-
 
       this.frame.draw();
     }
@@ -293,6 +286,14 @@
         this.ctx.fillRect(0, 0, this.frameWidth, this.slider.height);
         
         this.slider.draw();
+      }
+
+      if (this.debug) {
+        let debugStr = "Display state:\n";
+        Object.keys(this.configValues).forEach((config) => {
+          debugStr += config + ": " + this.configValues[config] + "\n";
+        });
+        this.ctx.fillText("debugStr",20,20);
       }
     }
   }
