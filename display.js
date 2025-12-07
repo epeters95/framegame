@@ -56,6 +56,8 @@
       this.dPointPosition = 1;
       this.holding        = false;
 
+      this.debug = true;//false;
+
 
       this.configValues = {
         clearBackground: false,
@@ -261,6 +263,14 @@
         }
         this.shrinkFactor -= this.shrinkInc;
       }
+
+      if (this.debug) {
+        console.log("Display state:")
+        Object.keys(this.configValues).forEach((config) => {
+          console.log(config + ": " + this.configValues[config])
+        });
+      }
+
 
       this.frame.draw();
     }
