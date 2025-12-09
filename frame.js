@@ -155,11 +155,13 @@
         let customFactor = this.customFactor;
         let customMath = this.configFunctions.customMath;
         return fArray[i].map( (f, idx) => {
-          let v = f(t)
+          // let v = f(t)
+          let v = t;
           if (typeof(customMath) === 'function') {
-            v += customFactor * customMath({x: v});
+            // v += customFactor * customMath({x: v});
+            v = customMath({x: t})
           }
-          let resultHue = Math.round( Math.max(0, Math.min(255, v)))
+          let resultHue = Math.round( Math.max(0, Math.min(255, f(v) )))
           return resultHue;
         })
       };
