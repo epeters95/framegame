@@ -156,12 +156,14 @@
         let customMath = this.configFunctions.customMath;
         return fArray[i].map( (f, idx) => {
           // let v = f(t)
-          let v = t;
+          let orig = f(t);
+          let altered = orig;
           if (typeof(customMath) === 'function') {
             // v += customFactor * customMath({x: v});
-            v = customMath({x: t})
+            altered = f(customMath({x: t}))
           }
-          let resultHue = Math.round( Math.max(0, Math.min(255, f(v) )))
+          let result = orig * (1 - customFactor) + altered * (customFactor);
+          let resultHue = Math.round( Math.max(0, Math.min(255, result )))
           return resultHue;
         })
       };
