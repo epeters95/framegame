@@ -124,7 +124,7 @@
       const sigmoid = (z) => {
         return 2 * Math.PI / (1 + Math.exp(-z + Math.PI));
       }
-      const hue = (period, interval, t) => {
+      const hue = (period, interval, t, factor, math) => {
 
         // Add custom function of hue period multiplied by reduction factor
         period += this.getHuePeriod()
@@ -152,17 +152,14 @@
           return null;
         }
 
-        let customFactor = this.customFactor;
-        let customMath = this.configFunctions.customMath;
         return fArray[i].map( (f, idx) => {
-          // let v = f(t)
           let orig = f(t);
           let altered = orig;
-          if (typeof(customMath) === 'function') {
-            // v += customFactor * customMath({x: v});
-            altered = f(customMath({x: t}))
+
+          if (typeof(math) === 'function') {
+            altered = f(math({x: t}))
           }
-          let result = orig * (1 - customFactor) + altered * (customFactor);
+          let result = orig * (1 - factor) + altered * (factor);
           let resultHue = Math.round( Math.max(0, Math.min(255, result )))
           return resultHue;
         })
@@ -174,7 +171,7 @@
 
       let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
 
-      let colors = hue((this.depth / this.periodDepthDivisor), interval, Math.abs(complAngle * this.tAngleMultiplier))
+      let colors = hue((this.depth / this.periodDepthDivisor), interval, Math.abs(complAngle * this.tAngleMultiplier), this.customFactor, this.configFunctions.customMath)
 
 
       let minDepth = (1.0 / this.depth) * (this.getDeltaTheta());
