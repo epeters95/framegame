@@ -56,7 +56,7 @@
       this.dPointPosition = 1;
       this.holding        = false;
 
-      this.debug = true;//false;
+      this.debug = false;
 
 
       this.configValues = {
@@ -144,6 +144,18 @@
       factorInput.addEventListener("change", (e) => {
         this.configValues.customFactor = parseFloat(e.target.value) / 100;
       })
+
+      let shapeInput = document.getElementById("hueshape-var")
+      let timeInput = document.getElementById("huetime-var")
+      const featureSelection = (e) => {
+        if (e.target.id === "hueshape-var") {
+
+        } else if (e.target.id === "huetime-var") {
+          // TODO
+        }
+      }
+      shapeInput.addEventListener("change", featureSelection)
+      timeInput.addEventListener("change", featureSelection)
 
       // Slider logic
 
