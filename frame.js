@@ -50,8 +50,6 @@
       this.bgColor = "black";
       this.fgColor = "white";
 
-      this.customFactor = 0.1;
-
       if (parent === null) {
 
         this.sinRef = Math.sin;
@@ -156,7 +154,8 @@
           let orig = f(t);
           let altered = orig;
 
-          if (typeof(math) === 'function') {
+          if (typeof(math) === 'function' &&
+              this.configFunctions.customFeature() === "huetime-var") {
             altered = f(math({x: t}))
           }
           let result = orig * (1 - factor) + altered * (factor);
@@ -164,6 +163,7 @@
           return resultHue;
         })
       };
+      // end hue()
 
 
       let maxDepth = Math.PI * 2;
@@ -171,7 +171,7 @@
 
       let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
 
-      let colors = hue((this.depth / this.periodDepthDivisor), interval, Math.abs(complAngle * this.tAngleMultiplier), this.customFactor, this.configFunctions.customMath)
+      let colors = hue((this.depth / this.periodDepthDivisor), interval, Math.abs(complAngle * this.tAngleMultiplier), this.configFunctions.customFactor(), this.configFunctions.customMath)
 
 
       let minDepth = (1.0 / this.depth) * (this.getDeltaTheta());

@@ -68,7 +68,8 @@
         shadowMode:      false,
         useAlphas:       true,
         addHue:          null,
-        customFactor:    0.1
+        customFactor:    0.1,
+        customFeature:   ""
       }
 
 
@@ -137,7 +138,7 @@
 
         const expression = computeEngine.parse(mathField.value);
         const customFunction = expression.compile();
-        this.configFunctions["customMath"] = customFunction;
+        this.configFunctions.customMath = customFunction;
       })
 
       let factorInput = document.getElementById("custom-factor")
@@ -148,11 +149,7 @@
       let shapeInput = document.getElementById("hueshape-var")
       let timeInput = document.getElementById("huetime-var")
       const featureSelection = (e) => {
-        if (e.target.id === "hueshape-var") {
-
-        } else if (e.target.id === "huetime-var") {
-          // TODO
-        }
+        this.configValues.customFeature = e.target.id
       }
       shapeInput.addEventListener("change", featureSelection)
       timeInput.addEventListener("change", featureSelection)
