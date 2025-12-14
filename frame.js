@@ -124,11 +124,14 @@
       }
       const hue = (period, interval, t) => {
 
-        let factor = this.configFunctions.customFactor()
+        let factor = this.configFunctions.customFactor();
+        let math = this.configFunctions.customMath;
+        let feature = this.configFunctions.customFeature();
+
         let shape = this.getHuePeriod();
 
         if (typeof(math) === 'function' &&
-            this.configFunctions.customFeature() === "hueshape-var") {
+            feature === "hueshape-var") {
 
           shape = (1 - factor) * shape + (factor) * math({x: shape})
         }
@@ -161,10 +164,9 @@
         return fArray[i].map( (f, idx) => {
           let orig = f(t);
           let altered = orig;
-          let math = this.configFunctions.customMath
 
           if (typeof(math) === 'function' &&
-              this.configFunctions.customFeature() === "huetime-var") {
+              feature === "huetime-var") {
             altered = f(math({x: t}))
           }
           let result = orig * (1 - factor) + altered * (factor);
