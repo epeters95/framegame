@@ -124,8 +124,16 @@
       }
       const hue = (period, interval, t) => {
 
-        // Add custom function of hue period multiplied by reduction factor
-        period += this.getHuePeriod()
+        let factor = this.configFunctions.customFactor()
+        let shape = this.getHuePeriod();
+
+        if (typeof(math) === 'function' &&
+            this.configFunctions.customFeature() === "hueshape-var") {
+
+          shape = (1 - factor) * shape + (factor) * math({x: shape})
+        }
+
+        period += shape;
 
         let maxF = (t) => maxHue;
         let minF = (t) => 0.5 * Math.sin(t);
@@ -159,7 +167,6 @@
               this.configFunctions.customFeature() === "huetime-var") {
             altered = f(math({x: t}))
           }
-          let factor = this.configFunctions.customFactor()
           let result = orig * (1 - factor) + altered * (factor);
           let resultHue = Math.round( Math.max(0, Math.min(255, result )))
           return resultHue;
