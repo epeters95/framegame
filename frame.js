@@ -130,10 +130,10 @@
 
         let shape = this.getHuePeriod();
 
-        if (typeof(math) === 'function' &&
-            feature === "hueshape-var") {
+        if (typeof(math) === 'function'
+            && feature === "hueshape-var") {
 
-          shape = (1 - factor) * shape + (factor) * math({x: shape})
+          shape = (1 - factor) * shape + factor * math({x: shape})
         }
 
         period += shape;
@@ -165,12 +165,13 @@
           let orig = f(t);
           let altered = orig;
 
-          if (typeof(math) === 'function' &&
-              feature === "huetime-var") {
+          if (typeof(math) === 'function'
+              && feature === "huetime-var") {
+
             altered = f(math({x: t}))
           }
-          let result = orig * (1 - factor) + altered * (factor);
-          let resultHue = Math.round( Math.max(0, Math.min(255, result )))
+          let result = orig * (1 - factor) + altered * factor;
+          let resultHue = Math.round( Math.max(0, Math.min(255, result)))
           return resultHue;
         })
       };
