@@ -122,11 +122,7 @@
       const sigmoid = (z) => {
         return 2 * Math.PI / (1 + Math.exp(-z + Math.PI));
       }
-      const hue = (period, interval, t) => {
-
-        let factor = this.configFunctions.customFactor();
-        let math = this.configFunctions.customMath;
-        let feature = this.configFunctions.customFeature();
+      const hue = (period, interval, t, factor, math, feature) => {
 
         let shape = this.getHuePeriod();
 
@@ -183,7 +179,11 @@
 
       let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
 
-      let colors = hue((this.depth / this.periodDepthDivisor), interval, Math.abs(complAngle * this.tAngleMultiplier))
+      let factor = this.configFunctions.customFactor();
+      let math = this.configFunctions.customMath;
+      let feature = this.configFunctions.customFeature();
+
+      let colors = hue((this.depth / this.periodDepthDivisor), interval, Math.abs(complAngle * this.tAngleMultiplier), factor, math, feature)
 
 
       let minDepth = (1.0 / this.depth) * (this.getDeltaTheta());
