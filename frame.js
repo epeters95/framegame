@@ -119,9 +119,6 @@
     }
 
     getColor() {
-      const sigmoid = (z) => {
-        return 2 * Math.PI / (1 + Math.exp(-z + Math.PI));
-      }
       const hue = (period, interval, t, factor, math, feature) => {
 
         let shape = this.getHuePeriod();
