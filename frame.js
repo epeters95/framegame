@@ -41,6 +41,8 @@
       this.configFunctions = this.getConfigFunctions();
 
       this.periodDepthDivisor = 10;
+      this.saturationDivisor = 20;
+      this.colorShiftDivisor = 2;
       this.tAngleMultiplier = 8;
       this.curveMultiplier = 120;
 
@@ -188,9 +190,9 @@
 
       let depth = this.depth
 
-      let redShifted   = colors[0] + (Math.cos(minDepth)) / 2
-      let greenShifted = colors[1] + (this.cosRef(minDepth)) / 2
-      let blueShifted  = colors[2] + (this.sinRef(minDepth)) / 2
+      let redShifted   = colors[0] + (Math.cos(minDepth)) / this.colorShiftDivisor
+      let greenShifted = colors[1] + (this.cosRef(minDepth)) / this.colorShiftDivisor
+      let blueShifted  = colors[2] + (this.sinRef(minDepth)) / this.colorShiftDivisor
 
       colors = [redShifted, greenShifted, blueShifted]
 
@@ -211,9 +213,9 @@
       if (this.configFunctions.useStrange()) {
         
         if (depth % 2 === 0) {
-          satVal = (this.cos(Math.PI * hsv[0] / 20) + satVal) / 2
+          satVal = (this.cos(Math.PI * hsv[0] / this.saturationDivisor) + satVal) / 2
         } else {
-          satVal = (this.cos(Math.PI * sv[1] / 20) + satVal) / 2
+          satVal = (this.cos(Math.PI * sv[1] / this.saturationDivisor) + satVal) / 2
         }
 
       }
