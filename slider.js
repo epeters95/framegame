@@ -16,6 +16,7 @@
       this.configs = {};
       this.activeConfig = "";
       this.getScale = getScale;
+      this.opacity = 1.0;
 
       this.initMouseListeners();
     }
@@ -140,6 +141,13 @@
         }));
 
       });
+      
+      this.canvas.addEventListener('mouseover', (e) => {
+        this.opacity = this.opacity / 2;
+      });
+      this.canvas.addEventListener('mouseoff', (e) => {
+        this.opacity = 1.0;
+      });
     }
 
     draw() {
@@ -147,7 +155,7 @@
 
       let widthL = this.leftWidth;
       let widthR = this.length - widthL;
-      const sliderColor = 'rgba(0,0,0,0.3)';
+      const sliderColor = 'rgba(0,0,0,' + this.opacity + ')';
       //Left side
       this.ctx.beginPath();
       this.ctx.fillStyle = sliderColor;
