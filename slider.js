@@ -166,7 +166,7 @@
       this.ctx.moveTo(this.x + widthL, this.y);
       this.ctx.lineTo(this.x + widthL, this.y + this.height);
       this.ctx.lineWidth = 5;
-      this.ctx.strokeStyle = 'blue';
+      this.ctx.strokeStyle = 'red';
       this.ctx.stroke();
 
       //Right Side

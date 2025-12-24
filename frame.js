@@ -38,8 +38,11 @@
 
       this.getConfigFunctions = getConfigFunctions;
       this.parent = parent;
+      this.configFunctions = this.getConfigFunctions();
 
       this.periodDepthDivisor = 10;
+      this.saturationDivisor = 20;
+      this.colorShiftDivisor = 2;
       this.tAngleMultiplier = 8;
       this.curveMultiplier = 120;
 
@@ -48,8 +51,6 @@
 
       this.bgColor = "black";
       this.fgColor = "white";
-
-      this.customFactor = 0.1;
 
       if (parent === null) {
 
@@ -107,7 +108,7 @@
       let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
       let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/complAngle));
       
-      if (this.getConfigFunctions().modifyHsv()) {
+      if (this.configFunctions.modifyHsv()) {
         return [60 * (h < 0 ? h + 6 : h), v && c/(30 * complAngle), v];
       } else {
         return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
@@ -120,12 +121,17 @@
     }
 
     getColor() {
-      const sigmoid = (z) => {
-        return 2 * Math.PI / (1 + Math.exp(-z + Math.PI));
-      }
-      const hue = (period, interval, t) => {
+      const hue = (period, interval, t, factor, math, feature) => {
 
-        period += this.getHuePeriod()
+        let shape = this.getHuePeriod();
+
+        if (typeof(math) === 'function'
+            && feature === "hueshape-var") {
+
+          shape = (1 - factor) * shape + factor * math({x: shape})
+        }
+
+        period += shape;
 
         let maxF = (t) => maxHue;
         let minF = (t) => 0.5 * Math.sin(t);
@@ -150,17 +156,21 @@
           return null;
         }
 
-        let customFactor = this.customFactor;
-        let customMath = this.getConfigFunctions().customMath;
         return fArray[i].map( (f, idx) => {
-          let v = f(t)
-          if (typeof(customMath) === 'function') {
-            v += customFactor * customMath(v);
+          let orig = f(t);
+          let altered = orig;
+
+          if (typeof(math) === 'function'
+              && feature === "huetime-var") {
+
+            altered = f(math({x: t}))
           }
-          let resultHue = Math.round( Math.max(0, Math.min(255, v)))
+          let result = orig * (1 - factor) + altered * factor;
+          let resultHue = Math.round( Math.max(0, Math.min(255, result)))
           return resultHue;
         })
       };
+      // end hue()
 
 
       let maxDepth = Math.PI * 2;
@@ -168,7 +178,11 @@
 
       let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
 
-      let colors = hue((this.depth / this.periodDepthDivisor), interval, Math.abs(complAngle * this.tAngleMultiplier))
+      let factor = this.configFunctions.customFactor();
+      let math = this.configFunctions.customMath;
+      let feature = this.configFunctions.customFeature();
+
+      let colors = hue((this.depth / this.periodDepthDivisor), interval, Math.abs(complAngle * this.tAngleMultiplier), factor, math, feature)
 
 
       let minDepth = (1.0 / this.depth) * (this.getDeltaTheta());
@@ -176,9 +190,9 @@
 
       let depth = this.depth
 
-      let redShifted   = colors[0] + (Math.cos(minDepth)) / 2
-      let greenShifted = colors[1] + (this.cosRef(minDepth)) / 2
-      let blueShifted  = colors[2] + (this.sinRef(minDepth)) / 2
+      let redShifted   = colors[0] + (Math.cos(minDepth)) / this.colorShiftDivisor
+      let greenShifted = colors[1] + (this.cosRef(minDepth)) / this.colorShiftDivisor
+      let blueShifted  = colors[2] + (this.sinRef(minDepth)) / this.colorShiftDivisor
 
       colors = [redShifted, greenShifted, blueShifted]
 
@@ -190,18 +204,18 @@
       let inverseVal = sv[1]
       let satVal = 1 - sv[0]
 
-      if (this.getConfigFunctions().useInvert()) {
+      if (this.configFunctions.useInvert()) {
         inverseVal = 1 - inverseVal;
       }
 
       // Opposite frames invert colors
 
-      if (this.getConfigFunctions().useStrange()) {
+      if (this.configFunctions.useStrange()) {
         
         if (depth % 2 === 0) {
-          satVal = (this.cos(Math.PI * hsv[0] / 20) + satVal) / 2
+          satVal = (this.cos(Math.PI * hsv[0] / this.saturationDivisor) + satVal) / 2
         } else {
-          satVal = (this.cos(Math.PI * sv[1] / 20) + satVal) / 2
+          satVal = (this.cos(Math.PI * sv[1] / this.saturationDivisor) + satVal) / 2
         }
 
       }
@@ -230,6 +244,8 @@
     }
     
     draw() {
+
+      this.configFunctions = this.getConfigFunctions();
 
       if (this.subFrame) {
 
@@ -299,13 +315,13 @@
 
         let alpha = Math.max(0, midpoint[3]) / 8
 
-        if (this.getConfigFunctions().colorSwap()) {
+        if (this.configFunctions.colorSwap()) {
           apoint = swapColors(...midpoint);
           bpoint = midpoint;
           midpoint = [...colors];
         }
 
-        if (this.getConfigFunctions().shadowMode()) {
+        if (this.configFunctions.shadowMode()) {
 
           alpha = midpoint.pop() // remove alpha
           midpoint = midpoint.flatMap((c, i) => maxHue - midpoint[i])
@@ -317,14 +333,14 @@
 
           midpoint = this.hsv2rgb(hsv[0], hsv[1], shadow)
 
-          if (this.getConfigFunctions().useAlphas()) {
+          if (this.configFunctions.useAlphas()) {
             midpoint.push(alpha);
           }
         }
         else {
 
           
-          if (this.getConfigFunctions().useAlphas()) {
+          if (this.configFunctions.useAlphas()) {
             midpoint[3] = alpha;
           }
         }

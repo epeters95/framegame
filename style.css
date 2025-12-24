@@ -27,3 +27,7 @@ body span, body label, body input, body p, body li {
   display: inline-block;
   width:20%;
 }
+
+#custom-math-field {
+  min-width: 160px;
+}

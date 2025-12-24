@@ -56,19 +56,20 @@
       this.dPointPosition = 1;
       this.holding        = false;
 
-      this.customFactor = 0.1;
+      this.debug = false;
+
 
       this.configValues = {
         clearBackground: false,
-        showSliders:     true,  // unused
-        useHueConfig:    false, // unused
         useInvert:       false,
         useStrange:      false,
         modifyHsv:       false,
         colorSwap:       true,
         shadowMode:      false,
         useAlphas:       true,
-        addHue:          null
+        addHue:          null,
+        customFactor:    0.1,
+        customFeature:   ""
       }
 
 
@@ -83,6 +84,9 @@
             this.configValues[opt.id] = opt.checked;
             if (opt.id === "clearBackground") {
               this.configValues.addHue = null;
+            }
+            else if (opt.id === "customFactor") {
+              this.configValues.customFactor = opt.value;
             }
           }
         });
@@ -134,13 +138,21 @@
 
         const expression = computeEngine.parse(mathField.value);
         const customFunction = expression.compile();
-        this.configFunctions["customMath"] = customFunction;
+        this.configFunctions.customMath = customFunction;
       })
 
       let factorInput = document.getElementById("custom-factor")
       factorInput.addEventListener("change", (e) => {
-        this.customFactor = parseFloat(e.target.value);
+        this.configValues.customFactor = parseFloat(e.target.value) / 100;
       })
+
+      let shapeInput = document.getElementById("hueshape-var")
+      let timeInput = document.getElementById("huetime-var")
+      const featureSelection = (e) => {
+        this.configValues.customFeature = e.target.id
+      }
+      shapeInput.addEventListener("change", featureSelection)
+      timeInput.addEventListener("change", featureSelection)
 
       // Slider logic
 
@@ -261,6 +273,7 @@
         this.shrinkFactor -= this.shrinkInc;
       }
 
+
       this.frame.draw();
     }
 
@@ -282,6 +295,14 @@
         this.ctx.fillRect(0, 0, this.frameWidth, this.slider.height);
         
         this.slider.draw();
+      }
+
+      if (this.debug) {
+        let debugStr = "Display state:\n";
+        Object.keys(this.configValues).forEach((config) => {
+          debugStr += config + ": " + this.configValues[config] + "\n";
+        });
+        this.ctx.fillText("debugStr",20,20);
       }
     }
   }
