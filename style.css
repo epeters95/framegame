@@ -18,14 +18,14 @@ body span, body label, body input, body p, body li {
 .config-options {
   color: white;
   display: inline-block;
-  width:20%;
+  width: 30%;
   float: inline-start;
 }
 
 .settings-panel {
   color: white;
   display: inline-block;
-  width:20%;
+  width: 30%;
 }
 
 #custom-math-field {
