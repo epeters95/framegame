@@ -56,7 +56,7 @@
       this.dPointPosition = 1;
       this.holding        = false;
 
-      this.debug = false;
+      this.debug = true;
 
 
       this.configValues = {
@@ -299,10 +299,15 @@
 
       if (this.debug) {
         let debugStr = "Display state:\n";
+        let i = 0;
         Object.keys(this.configValues).forEach((config) => {
-          debugStr += config + ": " + this.configValues[config] + "\n";
+          this.ctx.fillText(debugStr,20,20 + (i * 10));
+          debugStr = config + ": " + this.configValues[config] + "\n";
+
+          i++;
         });
-        this.ctx.fillText("debugStr",20,20);
+        // TODO: font siz
+        this.ctx.fillText(debugStr,20,20 + (i * 10));
       }
     }
   }
