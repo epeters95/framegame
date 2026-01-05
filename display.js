@@ -300,22 +300,23 @@
       if (this.debug) {
         let debugStr = "Display state:\n";
         let i = 0;
+        let linesize = 30;
         Object.keys(this.configValues).forEach((config) => {
-          this.ctx.fillText(debugStr,20,20 + (i * 10));
+          this.ctx.fillText(debugStr,20,20 + (i * linesize));
           debugStr = config + ": " + this.configValues[config] + "\n";
 
           i++;
         });
         i += 10;
         Object.keys(this.configFunctions).forEach((configF) => {
-          this.ctx.fillText(debugStr,20,20 + (i * 10));
-          debugStr = configF"\n";
+          this.ctx.fillText(debugStr,20,20 + (i * linesize));
+          debugStr = configF + ": " + this.configFunctions[configF] + "\n";
 
           i++;
         });
         // TODO: font siz
-        this.ctx = "regular 16pt sans-serif"
-        this.ctx.fillText(debugStr,20,20 + (i * 10));
+        this.ctx.font = "26pt sans-serif"
+        this.ctx.fillText(debugStr,20,20 + (i * linesize));
       }
     }
   }
