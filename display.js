@@ -306,7 +306,15 @@
 
           i++;
         });
+        i += 10;
+        Object.keys(this.configFunctions).forEach((configF) => {
+          this.ctx.fillText(debugStr,20,20 + (i * 10));
+          debugStr = configF"\n";
+
+          i++;
+        });
         // TODO: font siz
+        this.ctx = "regular 16pt sans-serif"
         this.ctx.fillText(debugStr,20,20 + (i * 10));
       }
     }
