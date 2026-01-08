@@ -9,6 +9,8 @@
   const maxWidth = 2400;
   let windowPercentage = 0.98;
 
+  const PI = Math.PI;
+
 
   class Display {
     constructor(canvas) {
@@ -105,7 +107,7 @@
         () => this.scale
         );
 
-      this.slider.addConfig("huePeriod", 0, (ratio) => { this.huePeriod = Math.PI * 2 * ratio }, true)
+      this.slider.addConfig("huePeriod", 0, (ratio) => { this.huePeriod = PI * 2 * ratio }, true)
       this.slider.addConfig("pointD", 0, (ratio) => { this.dPointPosition = ratio })
 
       // Config options
@@ -233,7 +235,7 @@
 
     draw() {
 
-      if (this.idleDelta > (10 * Math.PI)) {
+      if (this.idleDelta > (10 * PI)) {
         this.idleDelta = 0;
       }
       this.idleDelta += this.idleInc;

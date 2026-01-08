@@ -4,6 +4,8 @@
   const maxHue = 255;
   const numIntervals = 6;
 
+  const PI = Math.PI;
+
   const rgbaStr = (r,g,b,a=1) => "rgba("+ r +","+ g +","+ b +','+ a +")";
 
   class Frame {
@@ -103,7 +105,7 @@
     // https://stackoverflow.com/questions/8022885/rgb-to-hsv-color-in-javascript
 
     rgb2hsv(r,g,b) {
-      let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
+      let complAngle = ((PI * 2) - this.getDeltaTheta())
 
       let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
       let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/complAngle));
@@ -173,10 +175,10 @@
       // end hue()
 
 
-      let maxDepth = Math.PI * 2;
+      let maxDepth = PI * 2;
       let interval = maxDepth / numIntervals;
 
-      let complAngle = ((Math.PI * 2) - this.getDeltaTheta())
+      let complAngle = ((PI * 2) - this.getDeltaTheta())
 
       let factor = this.configFunctions.customFactor();
       let math = this.configFunctions.customMath;
@@ -213,9 +215,9 @@
       if (this.configFunctions.useStrange()) {
         
         if (depth % 2 === 0) {
-          satVal = (this.cos(Math.PI * hsv[0] / this.saturationDivisor) + satVal) / 2
+          satVal = (this.cos(PI * hsv[0] / this.saturationDivisor) + satVal) / 2
         } else {
-          satVal = (this.cos(Math.PI * sv[1] / this.saturationDivisor) + satVal) / 2
+          satVal = (this.cos(PI * sv[1] / this.saturationDivisor) + satVal) / 2
         }
 
       }
@@ -257,8 +259,8 @@
         let newWidthL = this.subFrame.radius * this.sin(this.theta );
         let newHeightL = this.subFrame.radius * this.cos(this.theta );
 
-        let newWidthR = this.subFrame.radius * this.sin(Math.PI - 1 * (this.theta ));
-        let newHeightR = this.subFrame.radius * this.cos(Math.PI - 1 * (this.theta ));
+        let newWidthR = this.subFrame.radius * this.sin(PI - 1 * (this.theta ));
+        let newHeightR = this.subFrame.radius * this.cos(PI - 1 * (this.theta ));
 
         
         let pointA = this.translateXY([ -1 * newWidthL, -1 * newHeightL])
@@ -291,9 +293,9 @@
 
         const swapColors = (r, g, b, a=1) => {
 
-          r = r * 1.1 * Math.PI / maxHue;
-          g = g * 1.1 * Math.PI / maxHue;
-          b = b * 1.1 * Math.PI / maxHue;
+          r = r * 1.1 * PI / maxHue;
+          g = g * 1.1 * PI / maxHue;
+          b = b * 1.1 * PI / maxHue;
           let rgb = [this.curveMultiplier * this.sinRef(r), this.curveMultiplier * this.sinRef(g), this.curveMultiplier * this.sinRef(b)]
 
           return [Math.abs(rgb[1]), Math.abs(rgb[2]), Math.abs(rgb[0]), Math.abs(a)];
@@ -328,7 +330,7 @@
 
           let hsv = this.rgb2hsv(...midpoint)
 
-          let shadow = this.sinRef(Math.PI * hsv[2] / 0.2);
+          let shadow = this.sinRef(PI * hsv[2] / 0.2);
 
 
           midpoint = this.hsv2rgb(hsv[0], hsv[1], shadow)
