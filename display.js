@@ -300,7 +300,7 @@
       }
 
       if (this.debug) {
-        let debugStr = "Display state:\n";
+        let debugStr = "Config values:\n";
         let i = 0;
         let linesize = 30;
         Object.keys(this.configValues).forEach((config) => {
@@ -310,13 +310,14 @@
           i++;
         });
         i += 10;
+        debugStr += "\n";
+        debugStr += "Config Functions:\n"
         Object.keys(this.configFunctions).forEach((configF) => {
           this.ctx.fillText(debugStr,20,20 + (i * linesize));
           debugStr = configF + ": " + this.configFunctions[configF] + "\n";
 
           i++;
         });
-        // TODO: font siz
         this.ctx.font = "26pt sans-serif"
         this.ctx.fillText(debugStr,20,20 + (i * linesize));
       }
