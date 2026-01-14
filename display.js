@@ -156,6 +156,16 @@
       shapeInput.addEventListener("change", featureSelection)
       timeInput.addEventListener("change", featureSelection)
 
+      let showDebug = document.getElementById("show-debug");
+      showDebug.addEventListener("change", (e) => {
+        if (e.target.value === "checked") {
+          this.debug = true;
+        }
+        else {
+          this.debug = false;
+        }
+      })
+
       // Slider logic
 
       this.canvas.addEventListener('mousedown', () => {
