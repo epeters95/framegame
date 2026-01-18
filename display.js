@@ -250,29 +250,10 @@
       }
       this.idleDelta += this.idleInc;
 
-      // Fill background
-      if (this.configValues.clearBackground) {
+      this.fillBackground();
 
-        this.ctx.clearRect(0, 0, this.frameWidth, this.frameHeight);
-        this.ctx.fillStyle = this.bgColor;
 
-        if (this.configValues.addHue !== null) {
-          this.ctx.fillStyle = this.configValues.addHue;
-        } else {
-          this.ctx.fillStyle = "#000000";
-        }
-        this.ctx.fillRect(0, 0, this.frameWidth, this.frameHeight);
-      }
-
-      if (!this.slider.held && this.holding) {
-        let diagonal = Math.hypot(this.frameWidth / 2, this.frameWidth / 2);
-        let x = this.centerX - this.mouseXY[0];
-        let y = this.centerY - this.mouseXY[1];
-        let distRatio = Math.hypot(x, y) / diagonal;
-
-        this.shrinkFactor = this.minShrinkRate + this.shrinkDelta * distRatio;
-        this.deltaTheta = this.idleDelta / 2;
-      }
+      this.dragWithMouse();
 
       if (this.slider.held || !this.holding) {
         this.deltaTheta = this.idleDelta;
@@ -287,6 +268,36 @@
 
 
       this.frame.draw();
+    }
+
+    fillBackground() {
+
+      if (this.configValues.clearBackground) {
+
+        this.ctx.clearRect(0, 0, this.frameWidth, this.frameHeight);
+        this.ctx.fillStyle = this.bgColor;
+
+        if (this.configValues.addHue !== null) {
+          this.ctx.fillStyle = this.configValues.addHue;
+        } else {
+          this.ctx.fillStyle = "#000000";
+        }
+        this.ctx.fillRect(0, 0, this.frameWidth, this.frameHeight);
+      }
+    }
+
+    dragWithMouse() {
+      // Drag diagonal using mouse
+      
+      if (!this.slider.held && this.holding) {
+        let diagonal = Math.hypot(this.frameWidth / 2, this.frameWidth / 2);
+        let x = this.centerX - this.mouseXY[0];
+        let y = this.centerY - this.mouseXY[1];
+        let distRatio = Math.hypot(x, y) / diagonal;
+
+        this.shrinkFactor = this.minShrinkRate + this.shrinkDelta * distRatio;
+        this.deltaTheta = this.idleDelta / 2;
+      }
     }
 
 
