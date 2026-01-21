@@ -245,29 +245,13 @@
 
     draw() {
 
-      if (this.idleDelta > (10 * PI)) {
-        this.idleDelta = 0;
-      }
-      this.idleDelta += this.idleInc;
-
       this.fillBackground();
 
-
-      this.dragWithMouse();
-
-      if (this.slider.held || !this.holding) {
-        this.deltaTheta = this.idleDelta;
-
-        if (this.shrinkFactor >= 1 && this.shrinkInc < 0 ||
-            this.shrinkFactor <= this.minShrinkRate && this.shrinkInc > 0) {
-
-          this.shrinkInc = this.shrinkInc * -1
-        }
-        this.shrinkFactor -= this.shrinkInc;
-      }
-
-
       this.frame.draw();
+
+      this.drawSlider();
+
+      this.drawDebug();
     }
 
     fillBackground() {
@@ -300,17 +284,20 @@
       }
     }
 
+    dragWithSlider() {
+      if (this.slider.held || !this.holding) {
+        this.deltaTheta = this.idleDelta;
 
-    start() {
+        if (this.shrinkFactor >= 1 && this.shrinkInc < 0 ||
+            this.shrinkFactor <= this.minShrinkRate && this.shrinkInc > 0) {
 
-      this.windowID = window.setInterval(this.step.bind(this), this.frameRate);
+          this.shrinkInc = this.shrinkInc * -1
+        }
+        this.shrinkFactor -= this.shrinkInc;
+      }
     }
-    
-    
-    step() {
-      
-      this.draw();
 
+    drawSlider() {
       if (this.configValues.showSliders) {
         // Clear slider area
         this.ctx.clearRect(0, 0, this.frameWidth, this.slider.height);
@@ -319,7 +306,9 @@
         
         this.slider.draw();
       }
+    }
 
+    drawDebug() {
       if (this.debug) {
         let debugStr = "Config values:\n";
         let i = 0;
@@ -342,6 +331,33 @@
         this.ctx.font = "26pt sans-serif"
         this.ctx.fillText(debugStr,20,20 + (i * linesize));
       }
+    }
+
+
+    start() {
+
+      this.windowID = window.setInterval(this.step.bind(this), this.frameRate);
+    }
+    
+    
+    step() {
+
+      // Track idle frame rotation in background
+
+      if (this.idleDelta > (10 * PI)) {
+        this.idleDelta = 0;
+      }
+      this.idleDelta += this.idleInc;
+
+      // Track input changes
+
+      this.dragWithMouse();
+
+      this.dragWithSlider();
+
+      // Draw
+
+      this.draw();
     }
   }
 
