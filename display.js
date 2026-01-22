@@ -324,7 +324,7 @@
         debugStr += "Config Functions:\n"
         Object.keys(this.configFunctions).forEach((configF) => {
           this.ctx.fillText(debugStr,20,20 + (i * linesize));
-          debugStr = configF + ": " + this.configFunctions[configF] + "\n";
+          debugStr = configF + ": " + this.configFunctions[configF]() + "\n";
 
           i++;
         });

@@ -4,6 +4,10 @@ body {
   width: 100%;
 }
 
+body span, body label, body p, body li {
+  color: white;
+}
+
 body span, body label, body input, body p, body li {
   font-family: "Figtree", sans-serif;
   font-optical-sizing: auto;
