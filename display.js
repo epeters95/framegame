@@ -58,7 +58,7 @@
       this.dPointPosition = 1;
       this.holding        = false;
 
-      this.debug = true;
+      this.debug = false;
 
 
       this.configValues = {
@@ -158,7 +158,7 @@
 
       let showDebug = document.getElementById("show-debug");
       showDebug.addEventListener("change", (e) => {
-        if (e.target.value === "checked") {
+        if (e.target.value === "on") {
           this.debug = true;
         }
         else {
@@ -310,26 +310,27 @@
 
     drawDebug() {
       if (this.debug) {
-        let debugStr = "Config values:\n";
+        this.ctx.fillText("Config values:",20,10);
+        let debugStr = "";
         let i = 0;
         let linesize = 30;
-        Object.keys(this.configValues).forEach((config) => {
-          this.ctx.fillText(debugStr,20,20 + (i * linesize));
-          debugStr = config + ": " + this.configValues[config] + "\n";
-
-          i++;
-        });
-        i += 10;
-        debugStr += "\n";
-        debugStr += "Config Functions:\n"
-        Object.keys(this.configFunctions).forEach((configF) => {
-          this.ctx.fillText(debugStr,20,20 + (i * linesize));
-          debugStr = configF + ": " + this.configFunctions[configF]() + "\n";
-
-          i++;
-        });
         this.ctx.font = "26pt sans-serif"
-        this.ctx.fillText(debugStr,20,20 + (i * linesize));
+
+        Object.keys(this.configValues).forEach((config) => {
+          debugStr = config + ": " + this.configValues[config] + "\n";
+          this.ctx.fillText(debugStr,20,25 + (i * linesize));
+          i++;
+        });
+        i += 5;
+        // this.ctx.fillText(debugStr,20,20 + (i * linesize));
+
+        this.ctx.fillText("Config functions:",20,30 + (i * linesize));
+
+        Object.keys(this.configFunctions).forEach((configF) => {
+          debugStr = configF + ": " + this.configFunctions[configF]() + "\n";
+          this.ctx.fillText(debugStr,20,35 + (i * linesize));
+          i++;
+        });
       }
     }
 
