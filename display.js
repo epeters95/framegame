@@ -310,7 +310,7 @@
 
     drawDebug() {
       if (this.debug) {
-        this.ctx.fillText("Config values:",20,10);
+        this.ctx.fillText("Config values:",20,30);
         let debugStr = "";
         let i = 0;
         let linesize = 30;
@@ -318,17 +318,17 @@
 
         Object.keys(this.configValues).forEach((config) => {
           debugStr = config + ": " + this.configValues[config] + "\n";
-          this.ctx.fillText(debugStr,20,25 + (i * linesize));
+          this.ctx.fillText(debugStr,20,60 + (i * linesize));
           i++;
         });
         i += 5;
         // this.ctx.fillText(debugStr,20,20 + (i * linesize));
 
-        this.ctx.fillText("Config functions:",20,30 + (i * linesize));
+        this.ctx.fillText("Config functions:",20,90 + (i * linesize));
 
         Object.keys(this.configFunctions).forEach((configF) => {
           debugStr = configF + ": " + this.configFunctions[configF]() + "\n";
-          this.ctx.fillText(debugStr,20,35 + (i * linesize));
+          this.ctx.fillText(debugStr,20,120 + (i * linesize));
           i++;
         });
       }
