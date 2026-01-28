@@ -311,13 +311,12 @@
     drawDebug() {
       if (this.debug) {
         this.ctx.fillText("Config values:",20,30);
-        let debugStr = "";
         let i = 0;
         let linesize = 30;
         this.ctx.font = "26pt sans-serif"
 
         Object.keys(this.configValues).forEach((config) => {
-          debugStr = config + ": " + this.configValues[config] + "\n";
+          let debugStr = config + ": " + this.configValues[config] + "\n";
           this.ctx.fillText(debugStr,20,60 + (i * linesize));
           i++;
         });
@@ -327,7 +326,7 @@
         this.ctx.fillText("Config functions:",20,90 + (i * linesize));
 
         Object.keys(this.configFunctions).forEach((configF) => {
-          debugStr = configF + ": " + this.configFunctions[configF]() + "\n";
+          let debugStr = configF + ": " + this.configFunctions[configF]() + "\n";
           this.ctx.fillText(debugStr,20,120 + (i * linesize));
           i++;
         });
