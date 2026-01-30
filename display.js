@@ -39,7 +39,7 @@
       this.centerY = Math.floor(canvasHeight / 2);
       this.frameRate = 30;
 
-      this.bgColor = "black";
+      this.bgColor = "#111111";
       this.fgColor = "white";
 
       this.mouseXY = [0, 0];
@@ -264,7 +264,7 @@
         if (this.configValues.addHue !== null) {
           this.ctx.fillStyle = this.configValues.addHue;
         } else {
-          this.ctx.fillStyle = "#000000";
+          this.ctx.fillStyle = this.bgColor;
         }
         this.ctx.fillRect(0, 0, this.frameWidth, this.frameHeight);
       }
