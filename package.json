@@ -1,0 +1,14 @@
+{
+  "name": "framegame",
+  "version": "1.0.0",
+  "description": "Javascript demo of the video feedback effect used to create a visualizer.",
+  "main": "display.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "epeters95",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "^9.39.2"
+  }
+}
