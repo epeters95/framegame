@@ -253,9 +253,6 @@
 
         // Draw its subFrame
 
-        let halfWidth = this.width / 2;
-        let halfHeight = this.height / 2;
-
         let newWidthL = this.subFrame.radius * this.sin(this.theta );
         let newHeightL = this.subFrame.radius * this.cos(this.theta );
 

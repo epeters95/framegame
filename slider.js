@@ -142,10 +142,10 @@
 
       });
       
-      this.canvas.addEventListener('mouseover', (e) => {
+      this.canvas.addEventListener('mouseover', () => {
         this.opacity = this.opacity / 2;
       });
-      this.canvas.addEventListener('mouseoff', (e) => {
+      this.canvas.addEventListener('mouseoff', () => {
         this.opacity = 1.0;
       });
     }

@@ -127,7 +127,7 @@
         optInput.addEventListener("click", () => {
           this.optionNames.forEach((optName) => { this.configOptions[optName] = false})
           this.configOptions[optInput.id] = optInput.checked;
-          this.slider.activateConfig(optName)
+          this.slider.activateConfig(optInput.id)
         });
       });
 
