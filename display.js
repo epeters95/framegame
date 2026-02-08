@@ -74,6 +74,14 @@
         customFeature:   ""
       }
 
+      // DOM elements
+      
+      let shapeInput = document.getElementById("hueshape-var")
+      let timeInput = document.getElementById("huetime-var")
+      let mathField = document.getElementById("custom-math-field");
+      let factorInput = document.getElementById("custom-factor")
+      let optionInputs = Array.from(document.getElementsByClassName("config-radio"));
+      let showDebug = document.getElementById("show-debug");
 
       Array.from(document.getElementsByClassName("config-checkbox"))
         .forEach( (opt) => {
@@ -93,6 +101,58 @@
           }
         });
 
+
+      // Config options
+
+      this.configOptions = { "pointD": true };
+
+      // Object hash of key -> () => config.value
+
+      this.configFunctions = Object.keys(this.configValues)
+                                  .reduce((obj, val) => ({ ...obj, [val]: () => this.configValues[val]}), {})
+
+
+      this.optionNames = optionInputs.map((opt) => opt.id);
+      optionInputs.forEach((optInput) => {
+        
+        optInput.addEventListener("click", () => {
+          this.optionNames.forEach((optName) => { this.configOptions[optName] = false})
+          this.configOptions[optInput.id] = optInput.checked;
+          this.slider.activateConfig(optInput.id)
+        });
+      });
+
+      // Custom field
+
+      const computeEngine = new ComputeEngine.ComputeEngine();
+      
+      mathField.addEventListener("change", () => {
+
+        const expression = computeEngine.parse(mathField.value);
+        const customFunction = expression.compile();
+        this.configFunctions.customMath = customFunction;
+      })
+
+      factorInput.addEventListener("change", (e) => {
+        this.configValues.customFactor = parseFloat(e.target.value) / 100;
+      })
+
+      const featureSelection = (e) => {
+        this.configValues.customFeature = e.target.id
+      }
+      shapeInput.addEventListener("change", featureSelection)
+      timeInput.addEventListener("change", featureSelection)
+
+      showDebug.addEventListener("change", (e) => {
+        if (e.target.value === "on") {
+          this.debug = true;
+        }
+        else {
+          this.debug = false;
+        }
+      })
+
+      // Slider logic
       const sliderStart = 0;
       const sliderLength = 860;
       const sliderX = this.centerX - Math.floor(sliderLength / 2);
@@ -109,64 +169,6 @@
 
       this.slider.addConfig("huePeriod", 0, (ratio) => { this.huePeriod = PI * 2 * ratio }, true)
       this.slider.addConfig("pointD", 0, (ratio) => { this.dPointPosition = ratio })
-
-      // Config options
-
-      this.configOptions = { "pointD": true };
-
-      // Object hash of key -> () => config.value
-
-      this.configFunctions = Object.keys(this.configValues)
-                                  .reduce((obj, val) => ({ ...obj, [val]: () => this.configValues[val]}), {})
-
-      let optionInputs = Array.from(document.getElementsByClassName("config-radio"));
-      this.optionNames = optionInputs.map((opt) => opt.id);
-
-      optionInputs.forEach((optInput) => {
-        
-        optInput.addEventListener("click", () => {
-          this.optionNames.forEach((optName) => { this.configOptions[optName] = false})
-          this.configOptions[optInput.id] = optInput.checked;
-          this.slider.activateConfig(optInput.id)
-        });
-      });
-
-      // Custom field
-
-      const computeEngine = new ComputeEngine.ComputeEngine();
-      let mathField = document.getElementById("custom-math-field");
-      
-      mathField.addEventListener("change", () => {
-
-        const expression = computeEngine.parse(mathField.value);
-        const customFunction = expression.compile();
-        this.configFunctions.customMath = customFunction;
-      })
-
-      let factorInput = document.getElementById("custom-factor")
-      factorInput.addEventListener("change", (e) => {
-        this.configValues.customFactor = parseFloat(e.target.value) / 100;
-      })
-
-      let shapeInput = document.getElementById("hueshape-var")
-      let timeInput = document.getElementById("huetime-var")
-      const featureSelection = (e) => {
-        this.configValues.customFeature = e.target.id
-      }
-      shapeInput.addEventListener("change", featureSelection)
-      timeInput.addEventListener("change", featureSelection)
-
-      let showDebug = document.getElementById("show-debug");
-      showDebug.addEventListener("change", (e) => {
-        if (e.target.value === "on") {
-          this.debug = true;
-        }
-        else {
-          this.debug = false;
-        }
-      })
-
-      // Slider logic
 
       this.canvas.addEventListener('mousedown', () => {
         
