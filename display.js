@@ -75,7 +75,7 @@
       }
 
       // DOM elements
-      
+
       let shapeInput = document.getElementById("hueshape-var")
       let timeInput = document.getElementById("huetime-var")
       let mathField = document.getElementById("custom-math-field");
@@ -83,23 +83,19 @@
       let optionInputs = Array.from(document.getElementsByClassName("config-radio"));
       let showDebug = document.getElementById("show-debug");
 
-      Array.from(document.getElementsByClassName("config-checkbox"))
-        .forEach( (opt) => {
-
-          // Add Hue special case
-          if (["cyan", "magenta", "yellow"].includes(opt.id) ) {
-            this.configValues.addHue = opt.id;
-          }
-          else {
-            this.configValues[opt.id] = opt.checked;
-            if (opt.id === "clearBackground") {
-              this.configValues.addHue = null;
-            }
-            else if (opt.id === "customFactor") {
-              this.configValues.customFactor = opt.value;
-            }
-          }
-        });
+      // // Add Hue special case
+      // if (["cyan", "magenta", "yellow"].includes(opt.id) ) {
+      //   this.configValues.addHue = opt.id;
+      // }
+      // else {
+      //   this.configValues[opt.id] = opt.checked;
+      //   if (opt.id === "clearBackground") {
+      //     this.configValues.addHue = null;
+      //   }
+      //   else if (opt.id === "customFactor") {
+      //     this.configValues.customFactor = opt.value;
+      //   }
+      // }
 
 
       // Config options
