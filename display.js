@@ -70,8 +70,8 @@
         shadowMode:      false,
         useAlphas:       true,
         addHue:          null,
-        customFactor:    0.1,
-        customFeature:   ""
+        customFactor:    50,
+        customFeature:   "huetime-var"
       }
 
       // DOM elements
@@ -140,7 +140,7 @@
       timeInput.addEventListener("change", featureSelection)
 
       showDebug.addEventListener("change", (e) => {
-        if (e.target.value === "on") {
+        if (e.target.checked) {
           this.debug = true;
         }
         else {

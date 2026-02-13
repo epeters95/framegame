@@ -145,7 +145,7 @@
       this.canvas.addEventListener('mouseover', () => {
         this.opacity = this.opacity / 2;
       });
-      this.canvas.addEventListener('mouseoff', () => {
+      this.canvas.addEventListener('mouseout', () => {
         this.opacity = 1.0;
       });
     }
