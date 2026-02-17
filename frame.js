@@ -171,7 +171,7 @@
             altered = f(math({x: t}))
           }
           let result = orig * (1 - factor) + altered * factor;
-          let resultHue = Math.round( Math.max(0, Math.min(255, result)))
+          let resultHue = Math.round( Math.max(0, Math.min(maxHue, result)))
           return resultHue;
         })
       };
@@ -206,7 +206,7 @@
       let hsv;
       if (this.configFunctions.modifyHsv()) {
         hsv = this.rgb2hsvModified(...colors)
-      else {
+      } else {
         hsv = this.rgb2hsv(...colors)
       }
 
