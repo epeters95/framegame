@@ -307,25 +307,27 @@
     }
 
     drawDebug() {
+      let textStartX = 20;
+      let textStartY = 30;
+      let linesize = 30;
+
       if (this.debug) {
-        this.ctx.fillText("Config values:",20,30);
+        this.ctx.fillText("Config values:", textStartX, textStartY);
         let i = 0;
-        let linesize = 30;
         this.ctx.font = "26pt sans-serif"
 
         Object.keys(this.configValues).forEach((config) => {
           let debugStr = config + ": " + this.configValues[config] + "\n";
-          this.ctx.fillText(debugStr,20,60 + (i * linesize));
+          this.ctx.fillText(debugStr, textStartX, textStartY * 2 + (i * linesize));
           i++;
         });
         i += 5;
-        // this.ctx.fillText(debugStr,20,20 + (i * linesize));
 
-        this.ctx.fillText("Config functions:",20,90 + (i * linesize));
+        this.ctx.fillText("Config functions:", textStartX, textStartY * 3 + (i * linesize));
 
         Object.keys(this.configFunctions).forEach((configF) => {
           let debugStr = configF + ": " + this.configFunctions[configF]() + "\n";
-          this.ctx.fillText(debugStr,20,120 + (i * linesize));
+          this.ctx.fillText(debugStr, textStartX, textStartY * 4 + (i * linesize));
           i++;
         });
       }

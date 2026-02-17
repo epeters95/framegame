@@ -105,16 +105,19 @@
     // https://stackoverflow.com/questions/8022885/rgb-to-hsv-color-in-javascript
 
     rgb2hsv(r,g,b) {
+      let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
+      let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 + (r - g)/c));
+
+      return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
+    }
+
+    rgb2hsvModified(r,g,b) {
       let complAngle = ((PI * 2) - this.getDeltaTheta())
 
       let v = Math.max(r, g, b), c = v - Math.min(r,g,b);
       let h = c && ((v == r) ? (g - b)/c : ((v==g) ? 2 + (b - r)/c : 4 +( r - g)/complAngle));
-      
-      if (this.configFunctions.modifyHsv()) {
-        return [60 * (h < 0 ? h + 6 : h), v && c/(30 * complAngle), v];
-      } else {
-        return [60 * (h < 0 ? h + 6 : h), v && c/v, v];
-      }
+
+      return [60 * (h < 0 ? h + 6 : h), v && c/(30 * complAngle), v];
     }
 
     hsv2rgb(h,s,v) {
@@ -200,7 +203,13 @@
 
       // Inkblot transformations
 
-      let hsv = this.rgb2hsv(...colors)
+      let hsv;
+      if (this.configFunctions.modifyHsv()) {
+        hsv = this.rgb2hsvModified(...colors)
+      else {
+        hsv = this.rgb2hsv(...colors)
+      }
+
       let sv = this.translateRef([hsv[1], hsv[2]])
 
       let inverseVal = sv[1]
